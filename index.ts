@@ -35,7 +35,7 @@ dotenv.config();
 const { MONGODB_PASSWORD, PORT } = process.env;
 
 mongoose.connect(
-  `mongodb+srv://carebuddy2024:${MONGODB_PASSWORD}@carebuddy2.2tuoqpb.mongodb.net/`,
+  `mongodb+srv://carebuddy2024:${MONGODB_PASSWORD}@carebuddy2.owxvjue.mongodb.net/`,
 );
 
 mongoose.connection.on('connected', () => {

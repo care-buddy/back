@@ -20,7 +20,7 @@ class UserService {
 
     return newUser;
   }
-  async confirmUser(_id: string) {
+  async getMyPage(_id: string) {
     const user = await this.userModel.findByUserId(_id);
     return user;
   }

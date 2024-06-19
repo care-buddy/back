@@ -4,7 +4,7 @@ import { checkBuddy } from './buddy';
 import dotenv from 'dotenv';
 
 export interface checkUser {
-  _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
+  //_id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
   nickName: string;
   email: string;
   adminNumber: number;
@@ -16,7 +16,28 @@ export interface checkUser {
 }
 
 const UserSchema = new Schema(
-  { 
+  {
+    nickName: { // 회원 이름 (별명)
+      type: String,
+      required: true
+    },
+    email: { // 이메일
+      type: String,
+      required: true
+    },
+    profileImage:{   // 프로필 사진
+      type: [String],
+      default: "public/defaultprofileImage.png"
+    },
+    introduce:{     // 소개글
+      type: String,
+      default: "",
+    }, 
+    adminNumber: { // 관리자 여부
+      type: Number,
+      default: 0,
+      required: true,
+    },
     postId: [
       {
       type: Schema.Types.ObjectId,
@@ -35,26 +56,6 @@ const UserSchema = new Schema(
       ref: "categories",
       }
     ],
-    nickName: { // 회원 이름 (별명)
-      type: String,
-      default: null,
-    },
-    email: { // 이메일 (카카오아이디)
-      type: String,
-    },
-    adminNumber: { // 관리자 여부
-      type: Number,
-      default: 0,
-      required: true,
-    },
-    profileImage:{   // 프로필 사진
-      type: [String],
-      default: "public/defaultprofileImage.png"
-    },
-    introduce:{ 
-      type: String,
-      default: "",
-    },
     deletedAt: { // 유저 화면에 보여주나 실제로 삭제되면 안됨
       type: Date,
       default: null,

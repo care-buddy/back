@@ -13,7 +13,7 @@ import userController from '../controller/userController'; //추가
 
 const router = Router();
 //router.use('/api/auth', kakaoRouter);
-router.use('/api/users', userRouter);
+router.use('/api/user', userRouter);
 router.use('/api/groups', categoryRouter);
 router.use('/api/buddy', buddyRouter);
 router.use('/api/post', postRouter);

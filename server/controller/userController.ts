@@ -10,11 +10,12 @@ interface AuthenticatedRequest extends Request {
 }
 
 class UserController {
-  // 회원가입
-  async joinUser(req: Request, res: Response) {
-    const datas = req.body;
-    const user = await userService.createUser(datas);
-    res.status(201).json({ success: true, data: user });
+  // 마이페이지
+  async getMyPage(req: AuthenticatedRequest, res: Response) {
+    const checkUser = await User.findOne({ email: req.user?.email })
+    const { _id } = req.params;
+    const user = await userService.getMyPage(_id);
+    res.status(200).json({ success: true, message: user, token: String(checkUser?._id) === _id });
   }
   // 회원정보 수정
   async updateUser(req: Request, res: Response) {
@@ -35,14 +36,6 @@ class UserController {
     });
     res.status(200).json({ success: true, data: deleteUser });
   }
-  // 마이페이지
-  async confirmUser(req: AuthenticatedRequest, res: Response) {
-
-    const checkUser = await User.findOne({ email: req.user?.email })
-    const { _id } = req.params;
-    const user = await userService.confirmUser(_id);
-    res.status(200).json({ success: true, message: user, token: String(checkUser?._id) === _id });
-  }
   // 전체 유저 확인
   async confirmAllUser(req: Request, res: Response) {
 
@@ -57,14 +50,6 @@ class UserController {
       return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
     }
     res.status(200).json({ success: true, user });
-  }
-
-  async deleteUserReal(req: Request, res: Response) {
-    const { _id } = req.params;
-    await userService.deleteUserReal(_id);
-    res
-      .status(200)
-      .json({ message: '회원탈퇴가 완료되었습니다(사용할 기능 x)' });
   }
 
   // 그룹가입
