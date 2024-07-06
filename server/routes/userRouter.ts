@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import userController from '../controller/userController';
+import { getUserToken } from '../middlewares/jwtAuth';
 import upload from '../utils/imageHandler';
-import { unAuth } from '../middlewares/auth';
+//import { unAuth } from '../middlewares/auth';
 
 const userRouter = Router();
 
-userRouter.get('/', userController.getMyPage);  // 회원 정보 조회
+//userRouter.get('/mypage', getUserToken, userController.getMyPage);  // 회원 정보 조회
 //userRouter.get('/:_id', userController.confirmUser);
 //userRouter.put('/:_id', userController.updateUser); // 수정
 //userRouter.put('/:_id/w', userController.deleteUser); // 삭제

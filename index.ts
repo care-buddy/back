@@ -20,16 +20,6 @@ app.use(
 
 app.use('/uploads', express.static('uploads'));
 
-/* 
-app.use(function (req: Request, res: Response, next: NextFunction) {
-  res.header(
-    'Access-Control-Allow-Origin',
-    'http://kdt-sw-8-team01.elicecoding.com/',
-  );
-  res.header('Access-Control-Allow-Credentials', 'true');
-  next();
-});
- */
 dotenv.config();
 
 const { MONGODB_PASSWORD, PORT } = process.env;

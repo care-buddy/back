@@ -34,10 +34,6 @@ class UserService {
     if (!updateUser) return { status: 404, err: '작업에 필요한 유저가 없습니다.' }
     return updateUser;
   }
-  async deleteUserReal(_id: string) {
-    const deleteUser = await this.userModel.withdrawalReal(_id);
-    return deleteUser;
-  }
 
   async joinCategory(_id: string, categoryId: string) {
     const user = await this.userModel.findByUserId(_id);

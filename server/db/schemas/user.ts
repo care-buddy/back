@@ -4,15 +4,18 @@ import { checkBuddy } from './buddy';
 import dotenv from 'dotenv';
 
 export interface checkUser {
-  //_id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
+  _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
   nickName: string;
   email: string;
-  adminNumber: number;
+  password: string;
   profileImage?: string[];
   introduce?: string;
+  adminNumber: number;
+  refreshToken: String; 
+  isTempPassword: Number;
+  buddyId: checkBuddy;
+  categoryId: checkCategory;
   deletedAt: Date;
-  categoryId: checkCategory
-  buddyId: checkBuddy
 }
 
 const UserSchema = new Schema(
@@ -21,9 +24,14 @@ const UserSchema = new Schema(
       type: String,
       required: true
     },
-    email: { // 이메일
+    email: { // 이메일 (아이디)
       type: String,
       required: true
+    },
+    //사용자 비밀번호
+    password: {
+      type: String,
+      required: true  //소셜 로그인 넣을 경우에는 false
     },
     profileImage:{   // 프로필 사진
       type: [String],
@@ -31,34 +39,42 @@ const UserSchema = new Schema(
     },
     introduce:{     // 소개글
       type: String,
-      default: "",
+      default: ""
     }, 
     adminNumber: { // 관리자 여부
       type: Number,
       default: 0,
-      required: true,
-    },
+      required: true
+    }, 
+    refreshToken: {
+			type: String,
+			select: false
+		},
+		isTempPassword: {
+      type: Number,
+      default: 0
+		},
     postId: [
       {
       type: Schema.Types.ObjectId,
-      ref: "posts",
+      ref: "posts"
       }
     ],
     buddyId: [
       { //category 스키마를 참조해 categoryId 가져옴
       type: Schema.Types.ObjectId,
-      ref: "buddies",
+      ref: "buddies"
       }
     ],
     categoryId: [
       {
       type: Schema.Types.ObjectId,
-      ref: "categories",
+      ref: "categories"
       }
     ],
     deletedAt: { // 유저 화면에 보여주나 실제로 삭제되면 안됨
       type: Date,
-      default: null,
+      default: null
     },
   },
   {

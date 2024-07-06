@@ -1,3 +1,4 @@
+/* 
 import { Request, Response, Router } from 'express';
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
@@ -89,3 +90,4 @@ kakaoRouter.get(
   },
 );
 export default kakaoRouter;
+ */
