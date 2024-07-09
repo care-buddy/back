@@ -1,0 +1,16 @@
+## 여러 컨테이너 정의 및 관리. 애플리케이션과 MongoDB 설정
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      - MONGODB_PASSWORD=${MONGODB_PASSWORD}
+      - PORT=${PORT}
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: sh -c "npm run build && node dist/index.js"
+    env_file:
+      - .env

@@ -23,6 +23,8 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "docker": "^1.0.0",
+    "docker-compose": "^0.24.8",
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^8.5.1",
     "mjml": "^4.15.3",

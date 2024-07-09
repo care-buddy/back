@@ -19,7 +19,19 @@ app.use(
 );
 
 app.use('/uploads', express.static('uploads'));
+/* 
+app.use(function (req: Request, res: Response, next: NextFunction) {
+  res.header(
+    'Access-Control-Allow-Origin',
+    'http://localhost:3001/',
+  );
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 
+// 정적 파일 제공 설정
+app.use(express.static('views'));
+ */
 dotenv.config();
 
 const { MONGODB_PASSWORD, PORT } = process.env;
@@ -43,7 +55,7 @@ app.use(router);
 app.use(errorHandler);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('OK');
+  res.sendFile(__dirname + "HTML파일");
 });
 
 app.listen(PORT, () => {
