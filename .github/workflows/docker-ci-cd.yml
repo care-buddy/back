@@ -1,0 +1,35 @@
+name: Docker CI/CD
+
+on:
+  push:  # push 이벤트 설정
+    branches:  # 트리거할 브랜치 목록 설정
+      - '*'  # 모든 브랜치에서 push 이벤트 트리거
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest  # Ubuntu 환경에서 실행합니다.
+
+    steps:
+      - name: Checkout repository  # GitHub 저장소를 체크아웃합니다.
+        uses: actions/checkout@v2
+
+      - name: Build Docker image  # Docker 이미지를 빌드합니다.
+        run: docker build -t node_practice:latest .
+
+      - name: Push Docker image to registry  # Docker 이미지를 Docker 레지스트리에 푸시합니다.
+        run: |
+          echo ${{ secrets.DOCKERHUB_PASSWORD }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          docker tag node_practice:latest your-docker-username/node_practice:latest
+          docker push your-docker-username/node_practice:latest
+
+      - name: SSH into server and deploy  # 서버에 SSH 접속하여 배포 작업을 수행합니다.
+        uses: appleboy/ssh-action@master  # SSH Action을 사용합니다.
+        with:
+          host: ${{ secrets.SERVER_HOST }}  # SSH로 접속할 서버 호스트
+          username: ${{ secrets.SERVER_USERNAME }}  # SSH로 접속할 사용자명
+          password: ${{ secrets.SERVER_PASSWORD }}  # SSH 비밀번호
+          script: |
+            docker stop node_practice_container || true  # 기존 컨테이너를 중지합니다. 이미 중지된 경우에도 무시합니다.
+            docker rm node_practice_container || true  # 기존 컨테이너를 삭제합니다. 이미 삭제된 경우에도 무시합니다.
+            docker pull your-docker-username/node_practice:latest  # Docker 레지스트리에서 최신 이미지를 가져옵니다.
+            docker run -d -p 3001:3001 --name node_practice_container --env-file .env your-docker-username/node_practice:latest  # 새로운 컨테이너를 실행합니다.
