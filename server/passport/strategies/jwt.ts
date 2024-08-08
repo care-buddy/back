@@ -19,14 +19,17 @@ const jwtOptions: StrategyOptions = {
 };
 
 export const accessJwt = new JwtStrategy(jwtOptions, async (payload: JwtPayload, done: VerifiedCallback) => {
-  // payload에서 email 추출 -> findByEmail에 전달
-  const user = await userModel.findByEmail(payload.email);
-
-  if (!user) {
-    return done(null, false, { message: '유저를 찾을 수 없습니다.' });
+  try {
+    // payload에서 email 추출 -> findByEmail에 전달
+    const user = await userModel.findByEmail(payload.email);
+    console.log(`** strategy accessJwt : [[ ${ user } ]]`);
+    if (!user) {
+      return done(null, false, { message: '유저를 찾을 수 없습니다.' });
+    }
+    return done(null, user);
+  } catch (error) {
+    return done(error, false);
   }
-
-  return done(null, user);
 });
 
 export const refreshJwt = new JwtStrategy(jwtOptions, async (payload: JwtPayload, done: VerifiedCallback) => {

@@ -6,17 +6,22 @@ import nunjucks from 'nunjucks';
 import cookieParser from 'cookie-parser';
 import router from './server/routes';
 import errorHandler from './server/middlewares/error';
+import passport from './server/passport';
 
 const app = express();
 
 app.use(express.json());
 
-app.use(
-  cors({
-    origin: '*',
-    credentials: true,
-  }),
-);
+// Passport 초기화
+app.use(passport.initialize());
+
+app.use(cors({ 
+  origin: '*', 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'cookie'], // Authorization 헤더를 허용
+  exposedHeaders: '*',
+  credentials: true 
+}));
 
 app.use('/uploads', express.static('uploads'));
 
@@ -50,5 +55,5 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT || 3001}`);
+  console.log(`Server is running on port ${PORT || 3003}`);
 });

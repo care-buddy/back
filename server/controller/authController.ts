@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import authService from '../services/authService';
 import { hashPassword, verifyPassword } from '../utils/hash';
 import { setAuthCodeToken, setUserToken } from '../utils/jwt';
 import { generateRandomCode } from '../utils/generateRandomCode';
 import sendMail from '../utils/sendMail';
+import userService from '../services/userServices';
 
 class AuthController {
   // 회원가입
@@ -18,7 +18,7 @@ class AuthController {
     // 비밀번호 해싱
     const hashedPassword = await hashPassword(password);
 
-    const newUser = await authService.createUser({
+    const newUser = await userService.createUser({
       nickName,
       email,
       password: hashedPassword,
@@ -30,7 +30,7 @@ class AuthController {
   // 로그인
   async signIn(req: Request, res: Response) {
     const { email, password } = req.body;
-    const user = await authService.getUserFromEmail(email);
+    const user = await userService.getUserFromEmail(email);
 
     if (user === null) {
       return res.status(400).json({ message: "계정이 존재하지 않습니다." });
@@ -39,7 +39,7 @@ class AuthController {
       return res.status(400).json({ message: "탈퇴한 계정입니다." });
     }
 
-    const userPassword = await authService.emailForPW(email);
+    const userPassword = await userService.emailForPW(email);
     
     if (userPassword === null) {
       return res.status(400).json({ message: "비밀번호가 설정되지 않았습니다." });
@@ -59,7 +59,7 @@ class AuthController {
     const { email } = req.body;
 
     try {
-      await authService.invalidateRefreshToken(email);
+      await userService.invalidateRefreshToken(email);
       res.status(200).json({ message: "로그아웃 성공!!" });
     } catch (error) {
       res.status(500).json({ message: "로그아웃 중 오류 발생" });
@@ -69,7 +69,7 @@ class AuthController {
   // 이메일 인증번호 발송
   async validateWithEmail(req: Request, res: Response) {
     const { email } = req.body;
-    const user = await authService.getUserFromEmail(email);
+    const user = await userService.getUserFromEmail(email);
 
     if (!user) {
       res.status(404).json({ message: "사용자를 찾을 수 없습니다." });
@@ -84,6 +84,13 @@ class AuthController {
       res.send({ message: "인증번호 전송 완료", token: setAuthCodeToken(authCode) });
     }
   }
+
+  // 토큰 발급
+	async createAccessToken(req: Request, res: Response) {
+		const { email } = req.body;
+		const userToken = await userService.getUserForToken(email);
+		res.status(200).json({ message: "토큰 발급", token: setUserToken(userToken, 1) });
+	}
 }
 
 const authController = new AuthController();

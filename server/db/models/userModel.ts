@@ -8,15 +8,9 @@ export class UserModel {
     return user;
   }
 
-  // 전체 유저 조회
-  async findAllUsers() {
-    const users = await User.find({});
-    return users;
-  }
-
   // userId로 사용자 조회
-  async findByUserId(id: string) { // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
-    const user = await User.findById({ id })
+  async findByUserId(_id: mongoose.Types.ObjectId) { // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
+    const user = await User.findById({ _id })
       .populate('buddyId')
       .populate('postId')
       .populate('categoryId');
@@ -41,6 +35,7 @@ export class UserModel {
       { email },
 			{ nickName: 1, name: 1, email: 1, profileImage: 1, isAdmin: 1, isTempPassword: 1,}
     );
+    console.log(`UserModel_userForToken_user: ${user}`);
     return user;
   }
 
@@ -49,10 +44,24 @@ export class UserModel {
     return user;
   }
 
-  // 유저 정보 수정 / 해당 코드 붙여넣어서
+  // 유저 정보 수정
   async update(_id: mongoose.Types.ObjectId, userdata: checkUser) {
-    const user = await User.findOneAndUpdate({ _id }, userdata, { new: true }).populate('buddyId').populate('postId').populate('categoryId')
+    const user = await User.findOneAndUpdate({ _id }, userdata, { new: true })
+      .populate('buddyId')
+      .populate('postId')
+      .populate('categoryId')
     return user;
+  }
+
+  // 회원 정보 삭제
+  async deleteUser(_id: mongoose.Types.ObjectId) {
+    const deletedUser = await User
+      .findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true })
+      .populate('buddyId')
+      .populate('postId')
+      .populate('categoryId')
+    console.log(_id);
+    return deletedUser;
   }
 
   // 프로필 사진 등록

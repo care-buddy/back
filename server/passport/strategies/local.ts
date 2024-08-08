@@ -1,5 +1,5 @@
 import { Strategy as LocalStrategy } from 'passport-local';
-import authService from '../../services/authService'; // 유저 인증 로직을 포함한 서비스
+import userService from '../../services/userServices'; // 유저 인증 로직을 포함한 서비스
 
 const localStrategy = new LocalStrategy(
   {
@@ -8,7 +8,7 @@ const localStrategy = new LocalStrategy(
   },
   async (email, password, done) => {
     try {
-      const user = await authService.validateUser(email, password);
+      const user = await userService.validateUser(email, password);
       if (!user) {
         return done(null, false, { message: 'Invalid credentials' });
       }

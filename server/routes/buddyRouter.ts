@@ -4,6 +4,8 @@ import upload from "../utils/imageHandler";
 
 const buddyRouter = Router();
 
+// 삭제는 put 으로
+
 buddyRouter.post( "/", buddyController.createBuddy);
 buddyRouter.get("/", buddyController.getAllBuddy);
 buddyRouter.get("/:_id", buddyController.getBuddyById);
