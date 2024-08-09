@@ -85,23 +85,27 @@ class UserController {
   }
 
   // 그룹 가입
-  async joinCategory(req: Request, res: Response) {
+  async joinCommunity(req: Request, res: Response) {
     const { _id } = req.params;
-    const { categoryId } = req.body;
+    const { communityId } = req.body;
     const objectId = new mongoose.Types.ObjectId(_id);
-    const user = await userService.joinCategory(objectId, categoryId);
+
+    const user = await userService.joinCommunity(objectId, communityId);
+
     res.status(200).json({ success: true, data: user });
   }
 
-  /*  
+   
   //그룹 탈퇴
-  async withdrawalCategory(req: Request, res: Response) {
+  async withdrawalCommunity(req: Request, res: Response) {
       const { _id } = req.params;
-      const { categoryId } = req.body;
-      const user = await userService.withdrawalCategory(_id, categoryId);
+      const { communityId } = req.body;
+      const objectId = new mongoose.Types.ObjectId(_id);
+
+      const user = await userService.withdrawalCommunity(objectId, communityId);
       res.status(200).json({ success: true, data: user });
   }
-*/
+
 }
 
 const userController = new UserController();

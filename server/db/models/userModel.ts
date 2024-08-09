@@ -13,7 +13,7 @@ export class UserModel {
     const user = await User.findById({ _id })
       .populate('buddyId')
       .populate('postId')
-      .populate('categoryId');
+      .populate('communityId');
 
     return user;
   }
@@ -49,7 +49,7 @@ export class UserModel {
     const user = await User.findOneAndUpdate({ _id }, userdata, { new: true })
       .populate('buddyId')
       .populate('postId')
-      .populate('categoryId')
+      .populate('communityId')
     return user;
   }
 
@@ -59,7 +59,7 @@ export class UserModel {
       .findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true })
       .populate('buddyId')
       .populate('postId')
-      .populate('categoryId')
+      .populate('communityId')
     console.log(_id);
     return deletedUser;
   }

@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { checkCategory } from './category';
+import { checkCommunity } from './community';
 import { checkBuddy } from './buddy';
 import dotenv from 'dotenv';
 
@@ -14,7 +14,7 @@ export interface checkUser {
   refreshToken: String; 
   isTempPassword: Number;
   buddyId: checkBuddy;
-  categoryId: checkCategory;
+  communityId: checkCommunity;
   deletedAt: Date;
 }
 
@@ -66,10 +66,10 @@ const UserSchema = new Schema(
       ref: "buddies"
       }
     ],
-    categoryId: [
+    communityId: [
       {
       type: Schema.Types.ObjectId,
-      ref: "categories"
+      ref: "communities"
       }
     ],
     deletedAt: { // 유저 화면에 보여주나 실제로 삭제되면 안됨

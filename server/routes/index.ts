@@ -2,7 +2,7 @@ import { Router } from 'express';
 //import kakaoRouter from './kakaoRouter';
 import authRouter from './authRouter';
 import userRouter from './userRouter';
-import categoryRouter from './categoryRouter';
+import communityRouter from './communityRouter';
 import buddyRouter from './buddyRouter';
 import postRouter from './postRouter';
 import hospitalRouter from './hospitalRouter';
@@ -16,7 +16,7 @@ const router = Router();
 //router.use('/api/auth', kakaoRouter);
 router.use('/api/auth', authRouter)
 router.use('/api/user', userRouter);
-router.use('/api/groups', categoryRouter);
+router.use('/api/communities', communityRouter);
 router.use('/api/buddy', buddyRouter);
 router.use('/api/post', postRouter);
 router.use('/api/hospital', hospitalRouter);
