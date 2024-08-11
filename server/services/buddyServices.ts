@@ -67,7 +67,7 @@ class BuddyyService {
   // 반려동물 삭제
   async deleteBuddy(_id: mongoose.Types.ObjectId) {
     const deleteBuddy = await this.buddyModel.deleteBuddy(_id);
-    if (!deleteBuddy) return { status: 404, err: '해당 동물이 없습니다.' }
+    if (!deleteBuddy) return { status: 404, err: '해당 동물이 없습니다.' };
     return deleteBuddy;
   }
 

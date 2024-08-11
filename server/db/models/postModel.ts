@@ -1,33 +1,49 @@
 import mongoose from "mongoose";
 import { Post, checkPost } from "../schemas/post";
+
 export class PostModel {
-  async findAllPosts() {
-    const posts = await Post.find({}).populate('userId').populate('categoryId')
+  // 글 생성
+  async createPost(postData: checkPost) {
+    const newPost = await Post.create(postData)
+    return newPost;
+  }
+
+  // 전체 글 조회
+  async findAllPosts(userId: mongoose.Types.ObjectId) {
+    const posts = await Post.find({userId})
+    .populate('userId')
+    .populate('communityId');
     return posts;
   }
-  async findById(_id:string) {
-    const posts = await Post.find({_id}).populate('userId').populate('categoryId')
-    return posts
+
+  // 글 하나 조회
+  async findById(_id: mongoose.Types.ObjectId) {
+    const posts = await Post.find({ _id })
+    .populate('userId')
+    .populate('communityId');
+    return posts;
   } // 글에서 유저에 대한 정보와 어느 카테고리에 속한지를 보여주고 싶을 때?
-  async createPost(postData:checkPost) {
-    const user = await Post.create(postData)
-    return user;
-  }
-  async updatePost(_id:mongoose.Types.ObjectId,postData:checkPost) {
-    const post = await Post.findOneAndUpdate({_id} , postData, { new: true }).populate('userId').populate('categoryId')
+
+  // 글 수정
+  async updatePost(_id: mongoose.Types.ObjectId, postData: checkPost) {
+    const post = await Post.findOneAndUpdate({ _id }, postData, { new: true })
+    .populate('userId')
+    .populate('communityId');
     return post;
   }
-  async deleteReal(_id:string) {
-    const post = await Post.findOneAndDelete({ _id });
-    return post;
+
+  // 글 삭제
+  async deletePost(_id: mongoose.Types.ObjectId) {
+    const deletepost = await Post.findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true });
+    return deletepost;
   }
-  async likeChange(_id: string, userId: mongoose.Types.ObjectId) {
+  async likeChange(_id: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId) {
     const post = await Post.findById(_id);
     if (!post) return { status: 404, err: '작업에 필요한 게시글이 없습니다.' }
-  
+
     const alreadyLiked = post.likedUsers.includes(userId);
     let numberOfLikes;
-  
+
     if (alreadyLiked) {
       // 이미 좋아요를 누른 상태이므로 좋아요를 제거
       await Post.findByIdAndUpdate(_id, { $pull: { likedUsers: userId } });
@@ -40,12 +56,12 @@ export class PostModel {
     post.save()
     return numberOfLikes;
   }
-  
+
   // 프로필 사진 등록
   async updatePostImage(_id: mongoose.Types.ObjectId, postImage?: string) {
     const result = await Post.findOneAndUpdate(
       { _id },
-      { postImage }, 
+      { postImage },
       { new: true }
     );
     return result;

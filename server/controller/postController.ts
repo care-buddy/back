@@ -1,49 +1,54 @@
 import postService from '../services/postServices';
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
+
 class PostController {
-  async joinPost(req: Request, res: Response) {
-      const datas = req.body;
-      const post = await postService.createPost(datas)
-      res.status(201).json({ success: true, data: post });
+  // 글 생성
+  async createPost(req: Request, res: Response) {
+    const datas = req.body;
+    const post = await postService.createPost(datas)
+    res.status(201).json({ success: true, data: post });
   }
 
-  async updatePost(req: Request, res: Response) {
-      const { _id } = req.params;
-      const postData = req.body;
-      const objectId = new mongoose.Types.ObjectId(_id)
-      const updatePost = await postService.updatePost(objectId, postData);
-      res.status(200).json({ success: true, data:updatePost });
+  // 유저의 전체 글 확인
+  async confirmAllPost(req: Request, res: Response) {
+    const { userId } = req.body;
+    const posts = await postService.confirmAllPosts(userId);
+
+    res.status(200).json({ success: true, message: posts });
   }
 
-  async deletePost(req: Request, res: Response) {
-      const { _id } = req.params;
-      const {deletedAt, ...postData} = req.body;
-      const objectId = new mongoose.Types.ObjectId(_id)
-      const deletePost = await postService.updatePost(objectId, {...postData, deletedAt:new Date()});
-      res.status(200).json({ success: true, data:deletePost });
-  }
-
+  // 글 하나 조회
   async confirmPost(req: Request, res: Response) {
-			const { _id } = req.params
-			const post = await postService.confirmUserPosts(_id)
-			res.status(200).json({ success: true, message: post });
+    const { _id } = req.params;
+    const objectId = new mongoose.Types.ObjectId(_id);
+    const post = await postService.confirmUserPosts(objectId);
+    res.status(200).json({ success: true, message: post });
   }
-	// 전체 글 확인
-	async confirmAllPost(req: Request, res: Response) {
-			const posts = await postService.confirmAllPosts()
-			res.status(200).json({ success: true, message: posts });
+
+  // 글 수정
+  async updatePost(req: Request, res: Response) {
+    const { _id } = req.params;
+    const postData = req.body;
+    const objectId = new mongoose.Types.ObjectId(_id)
+    const updatePost = await postService.updatePost(objectId, postData);
+    res.status(200).json({ success: true, message: "성공적으로 수정이 완료되었습니다" });
   }
-  // 실제 글 삭제 (사용하지 않음)
-  async deletePostReal(req: Request, res: Response) {
-    const { _id } = req.params
-    await postService.deletePostReal(_id)
-    res.status(200).json({ message: "글 삭제가 완료되었습니다(사용할 기능 아님)" });
+
+  // 글 삭제
+  async deletePost(req: Request, res: Response) {
+    const { _id } = req.params;
+    const objectId = new mongoose.Types.ObjectId(_id);
+
+    const deletePost = await postService.deletePost(objectId);
+    res.status(200).json({ success: true, message: "글 삭제가 완료되었습니다", data: deletePost });
   }
+
   async likeHandle(req: Request, res: Response) {
-    const { _id } = req.params
-    const { userId } = req.body
-    const like = await postService.likeChange(_id, userId)
+    const { _id } = req.params;
+    const { userId } = req.body;
+    const objectId = new mongoose.Types.ObjectId(_id);
+    const like = await postService.likeChange(objectId, userId);
     res.status(200).json({ success: true, message: like });
   }
 

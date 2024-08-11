@@ -1,58 +1,69 @@
 import mongoose from "mongoose";
-import postModel,{PostModel} from "../db/models/postModel";
+import postModel, { PostModel } from "../db/models/postModel";
 import { checkPost } from "../db/schemas/post";
-import { User } from "../db/schemas/user";
+import { User, checkUser } from '../db/schemas/user';
+import userModel, { UserModel } from '../db/models/userModel';
+
 class PostService {
   postModel: PostModel;
-  constructor(postModel:PostModel) {
+  userModel: UserModel;
+
+  constructor(postModel: PostModel, userModel: UserModel) {
     this.postModel = postModel;
+    this.userModel = userModel;
   }
-  async createPost(postData: checkPost) { 
+
+  // 글 생성
+  async createPost(postData: checkPost) {
     const newPost = await this.postModel.createPost(postData)
     const newDatas = await newPost.save()
     const user = await User.findById(newDatas.userId);
     if (user) {
       user.postId.push(newPost._id);
       await user.save();
-  }
+    }
     return newPost;
   }
 
-  async confirmAllPosts() { // 전체 카테고리 조회
-    const posts = await this.postModel.findAllPosts()
+  // 글 전체 조회
+  async confirmAllPosts(userId: mongoose.Types.ObjectId) {
+    const user = await this.userModel.findByUserId(userId);
+    const posts = await this.postModel.findAllPosts(userId);
+
+    if (!user) {
+      return { status: 404, err: '작업에 필요한 유저가 없습니다.' }
+    } else if (!posts) {
+      return { status: 404, err: '작업에 필요한 게시물이 없습니다.' }
+    }
     return posts;
   }
-  async confirmUserPosts(_id:string) {
+
+  // 글 하나 조회
+  async confirmUserPosts(_id: mongoose.Types.ObjectId) {
     const posts = await this.postModel.findById(_id)
     return posts;
   }
-  async updatePost(_id:mongoose.Types.ObjectId, postData:checkPost) {
+
+  // 글 수정
+  async updatePost(_id: mongoose.Types.ObjectId, postData: checkPost) {
     if (!_id) return { status: 404, err: '작업에 필요한 ID가 없습니다.' }
 
-    const foundPost = await this.postModel.updatePost(_id,postData);
+    const foundPost = await this.postModel.updatePost(_id, postData);
     if (!foundPost) return { status: 404, err: '작업에 필요한 게시물이 없습니다.' }
 
-    const users = await User.find({ postId: _id });
+    const users = await User.find({ postId: { $elemMatch: { $eq: _id } } });
     console.log(users)
-  //   users.forEach(async (user:any) => {
-  //     // 해당 Buddy의 정보를 업데이트합니다.
-  //     if (postData.postImage) user.postImage = postData.postImage
-  //     if (postData.title) user.postId.title = postData.title
-  //     if (checkBuddy.sex) user.sex = checkBuddy.sex;
-  //     if (checkBuddy.kind) user.kind = checkBuddy.kind;
-  //     if (checkBuddy.weight) user.weight = checkBuddy.weight;
-  //     if (checkBuddy.isNeutered !== undefined) user.isNeutered = checkBuddy.isNeutered;
-  //     await user.save();
-  // })
     return foundPost;
   }
 
-  async deletePostReal(_id:string) {
-    const deletePost = await this.postModel.deleteReal(_id);
+  // 글 삭제
+  async deletePost(_id: mongoose.Types.ObjectId) {
+    const deletePost = await this.postModel.deletePost(_id);
+    if (!deletePost) return { status: 404, err: '해당 게시물이 없습니다.' }
     return deletePost;
   }
-  async likeChange(_id: string, userId: mongoose.Types.ObjectId) {
-    const likeChange = await this.postModel.likeChange(_id,userId)
+  async likeChange(_id: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId) {
+    const likeChange = await this.postModel.likeChange(_id, userId)
     return likeChange
   }
 
@@ -64,5 +75,5 @@ class PostService {
   }
 }
 
-const postService = new PostService(postModel);
+const postService = new PostService(postModel, userModel);
 export default postService;

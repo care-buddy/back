@@ -29,8 +29,7 @@ export class BuddyModel {
 
   // 반려동물 삭제
   async deleteBuddy(_id: mongoose.Types.ObjectId) {
-    
-    const result = await Buddy.findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true })
+    const result = await Buddy.findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true });
     return result;
   }
 

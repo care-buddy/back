@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 export interface checkPost {
   _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
   userId: Schema.Types.ObjectId;
-  categoryId: Schema.Types.ObjectId;
+  communityId: Schema.Types.ObjectId;
   title: string;
   content: string;
   deletedAt?: Date | null;
@@ -20,16 +20,19 @@ const PostSchema = new Schema(
       ref: "users",
       required: true
     },
-    categoryId: {   //category 스키마를 참조해 categoryId 가져옴
+    communityId: {   //category 스키마를 참조해 categoryId 가져옴
       type: Schema.Types.ObjectId,
-      ref: "categories",
+      ref: "communities",
       required: true
     },
     title: {     // 글제목
       type: String,
       required: true
     },
-    likedUsers: [{ type: Schema.Types.ObjectId, ref: 'users' }],
+    likedUsers: [{ 
+      type: Schema.Types.ObjectId, 
+      ref: 'users' 
+    }],
     content: {    // 글 내용
       type: String,
       required: true
