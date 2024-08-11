@@ -7,10 +7,11 @@ class BuddyController {
   async createBuddy(req: Request, res: Response) {
     try {
       const datas = req.body;
+      const birthDate = datas.birth;
 
-      const buddy = await buddyService.createBuddy(datas);
-      
-      res.status(201).json({ success: true, data: buddy });
+      const buddy = await buddyService.createBuddy({ ...datas, birth: new Date(birthDate) });
+
+      res.status(201).json({ success: true, data: buddy._id });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
     }
@@ -19,8 +20,9 @@ class BuddyController {
   // 반려동물 전체 조회
   async getAllBuddy(req: Request, res: Response) {
     try {
-      const buddy = await buddyService.getAllBuddies();
-      
+      const { userId } = req.body;
+      const buddy = await buddyService.getAllBuddies(userId);
+
       res.status(200).json({ success: true, message: buddy });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
@@ -43,32 +45,34 @@ class BuddyController {
   }
 
   // 반려동물 정보 수정 및 삭제
-  async updateAndDeleteBuddy(req: Request, res: Response) {
+  async updateBuddy(req: Request, res: Response) {
     try {
       // req의 params과 body에서 데이터 가져옴
       const { _id } = req.params;
       const {
-        buddyImage, 
-        age,
-        sex,
+        buddyImage,
+        species,
         kind,
-        weight,
-        isNeutered,
+        birth,
+        sex, 
+        weight, 
+        isNeutered, 
         deletedAt
       } = req.body;
 
       const objectId = new mongoose.Types.ObjectId(_id);
 
-      const updateBuddy = await buddyService.updateAndDeleteBuddy(objectId, {
-        buddyImage, 
-        age,
-        sex,
+      const updateBuddy = await buddyService.updateBuddy(objectId, {
+        buddyImage,
+        species,
         kind,
-        weight,
-        isNeutered,
+        birth,
+        sex, 
+        weight, 
+        isNeutered, 
         deletedAt
       });
-      
+
       res.status(200).json({ success: true, data: updateBuddy });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
@@ -102,7 +106,7 @@ class BuddyController {
       res.status(500).json({ message: "서버의 buddyContrller에서 에러가 났습니다." });
     }
   }
-  
+
   // 프로필 사진 삭제
   async deleteBuddyImage(req: Request, res: Response) {
     try {

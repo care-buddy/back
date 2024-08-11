@@ -10,8 +10,8 @@ export class BuddyModel {
   }
 
   // 전체 반려동물 조회
-  async findAllBuddies() {
-    const buddies = await Buddy.find({});
+  async findAllBuddies(userId: mongoose.Types.ObjectId) {
+    const buddies = await Buddy.find({userId});
     return buddies;
   }
 
@@ -21,23 +21,20 @@ export class BuddyModel {
     return buddy;
   }
 
-  // 반려동물 정보 수정 및 삭제
+  // 반려동물 정보 수정
   async updateBuddy(_id: mongoose.Types.ObjectId, updateData: checkBuddy) {
-    const updatedBuddy = await Buddy.findOneAndUpdate(
-      { _id }, 
-      updateData, 
-      { new: true }
-      )
+    const updatedBuddy = await Buddy.findOneAndUpdate({ _id }, updateData, { new: true });
     return updatedBuddy;
   }
 
   // 반려동물 삭제
   async deleteBuddy(_id: mongoose.Types.ObjectId) {
-    const result = await Buddy.deleteOne({ _id});
+    
+    const result = await Buddy.findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true })
     return result;
   }
 
-  // 사진 등록
+  // 프로필 사진 등록 및 삭제
   async updateBuddyImage(_id: mongoose.Types.ObjectId, buddyImage?: string) {
     const result = await Buddy.findOneAndUpdate(
       { _id },

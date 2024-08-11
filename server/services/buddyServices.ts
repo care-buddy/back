@@ -1,13 +1,16 @@
 import mongoose from 'mongoose';
 import buddyModel, { BuddyModel } from '../db/models/buddyModel';
 import { checkBuddy } from '../db/schemas/buddy';
-import { User } from '../db/schemas/user';
+import { User, checkUser } from '../db/schemas/user';
+import userModel, { UserModel } from '../db/models/userModel';
 
 class BuddyyService {
   buddyModel: BuddyModel;
+  userModel: UserModel;
 
-  constructor(buddyModel: BuddyModel) {
+  constructor(buddyModel: BuddyModel, userModel: UserModel) {
     this.buddyModel = buddyModel;
+    this.userModel = userModel;
   }
 
   // 반려동물 등록
@@ -23,8 +26,16 @@ class BuddyyService {
   }
 
   // 전체 반려동물 조회
-  async getAllBuddies() {
-    const buddies = await this.buddyModel.findAllBuddies();
+  async getAllBuddies(userId: mongoose.Types.ObjectId) {
+    const user = await this.userModel.findByUserId(userId);
+    const buddies = await this.buddyModel.findAllBuddies(userId);
+
+    if (!user) {
+      return { status: 404, err: '작업에 필요한 유저가 없습니다.' }
+    } else if (!buddies) {
+      return { status: 404, err: '작업에 필요한 동물이 없습니다.' }
+    }
+
     return buddies;
   }
 
@@ -34,11 +45,8 @@ class BuddyyService {
     return buddy;
   }
 
-  // 반려동물 정보 수정 및 삭제
-  async updateAndDeleteBuddy(
-    _id: mongoose.Types.ObjectId,
-    checkBuddy: checkBuddy,
-  ) {
+  // 반려동물 정보 수정
+  async updateBuddy(_id: mongoose.Types.ObjectId, checkBuddy: checkBuddy) {
     let updateData: Partial<checkBuddy> = checkBuddy;
 
     if (checkBuddy.isNeutered !== undefined) {
@@ -52,16 +60,6 @@ class BuddyyService {
 
     const users = await User.find({ buddyId: { $elemMatch: { $eq: _id } } });
     console.log(users);
-    // buddyId: [ new ObjectId('661f448ec0e61e44f16722fa') ],
-    // users.forEach(async (user:any) => {
-    //     // 해당 Buddy의 정보를 업데이트합니다.
-    //     if (checkBuddy.profileImage) user.profileImage = checkBuddy.profileImage;
-    //     if (checkBuddy.age) user.age = checkBuddy.age;
-    //     if (checkBuddy.sex) user.sex = checkBuddy.sex;
-    //     if (checkBuddy.kind) user.kind = checkBuddy.kind;
-    //     if (checkBuddy.weight) user.weight = checkBuddy.weight;
-    //     await user.save();
-    // });
 
     return foundBuddy;
   }
@@ -69,18 +67,11 @@ class BuddyyService {
   // 반려동물 삭제
   async deleteBuddy(_id: mongoose.Types.ObjectId) {
     const deleteBuddy = await this.buddyModel.deleteBuddy(_id);
-    const users = await User.find({ buddyId: { $elemMatch: { $eq: _id } } });
-    users.forEach(async (user) => {
-      const index = user.buddyId.indexOf(_id);
-      if (index !== -1) {
-        user.buddyId.splice(index, 1);
-        await user.save();
-      }
-    });
+    if (!deleteBuddy) return { status: 404, err: '해당 동물이 없습니다.' }
     return deleteBuddy;
   }
 
-  // 프로필 사진 등록
+  // 프로필 사진 등록 및 삭제
   async updateBuddyImage(_id: mongoose.Types.ObjectId, buddyImage?: string) {
     console.log(`${_id}의 사진을 수정합니다. [Service]`);
     const result = await this.buddyModel.updateBuddyImage(_id, buddyImage);
@@ -88,5 +79,5 @@ class BuddyyService {
   }
 }
 
-const buddyService = new BuddyyService(buddyModel);
+const buddyService = new BuddyyService(buddyModel, userModel);
 export default buddyService;

@@ -17,7 +17,7 @@ const router = Router();
 router.use('/api/auth', authRouter)
 router.use('/api/user', userRouter);
 router.use('/api/communities', communityRouter);
-router.use('/api/buddy', buddyRouter);
+router.use('/api/buddies', buddyRouter);
 router.use('/api/post', postRouter);
 router.use('/api/hospital', hospitalRouter);
 router.use('/api/comment', commentRouter);
