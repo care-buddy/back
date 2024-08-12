@@ -55,5 +55,5 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT || 3003}`);
+  console.log(`Server is running on port ${PORT || 3001}`);
 });
