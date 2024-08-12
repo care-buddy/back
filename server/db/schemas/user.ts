@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 import { checkCommunity } from './community';
 import { checkBuddy } from './buddy';
 import dotenv from 'dotenv';
+import { checkComment } from './comment';
 
 export interface checkUser {
   _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
@@ -15,6 +16,7 @@ export interface checkUser {
   isTempPassword: Number;
   buddyId: checkBuddy;
   communityId: checkCommunity;
+  commentId: checkComment;
   deletedAt: Date;
 }
 
@@ -60,6 +62,10 @@ const UserSchema = new Schema(
       ref: "posts"
       }
     ],
+    commentId: [{   //comment 스키마를 참조해 commentId 가져옴
+      type: Schema.Types.ObjectId,
+      ref: "comments"
+    }],
     buddyId: [
       { //category 스키마를 참조해 categoryId 가져옴
       type: Schema.Types.ObjectId,

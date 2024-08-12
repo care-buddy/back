@@ -12,7 +12,8 @@ export class PostModel {
   async findAllPosts(userId: mongoose.Types.ObjectId) {
     const posts = await Post.find({userId})
     .populate('userId')
-    .populate('communityId');
+    .populate('communityId')
+    .populate('commentId');
     return posts;
   }
 
@@ -20,7 +21,8 @@ export class PostModel {
   async findById(_id: mongoose.Types.ObjectId) {
     const posts = await Post.find({ _id })
     .populate('userId')
-    .populate('communityId');
+    .populate('communityId')
+    .populate('commentId');
     return posts;
   } // 글에서 유저에 대한 정보와 어느 카테고리에 속한지를 보여주고 싶을 때?
 
@@ -28,7 +30,8 @@ export class PostModel {
   async updatePost(_id: mongoose.Types.ObjectId, postData: checkPost) {
     const post = await Post.findOneAndUpdate({ _id }, postData, { new: true })
     .populate('userId')
-    .populate('communityId');
+    .populate('communityId')
+    .populate('commentId');
     return post;
   }
 
@@ -37,6 +40,8 @@ export class PostModel {
     const deletepost = await Post.findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true });
     return deletepost;
   }
+
+  // 좋아요
   async likeChange(_id: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId) {
     const post = await Post.findById(_id);
     if (!post) return { status: 404, err: '작업에 필요한 게시글이 없습니다.' }

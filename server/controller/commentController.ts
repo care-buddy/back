@@ -9,17 +9,7 @@ class CommentController {
       const datas = req.body;
       const comment = await commentService.createComment(datas);
 
-      res.status(201).json({ success: true, data: comment });
-    } catch (err: any) {
-      res.status(500).json({ err: err.message });
-    }
-  }
-
-  // 전체 댓글 조회
-  async getAllComments(req: Request, res: Response) {
-    try {
-      const comments = await commentService.getAllComments();
-      res.status(200).json({ success: true, message: comments });
+      res.status(201).json({ success: true, message: "댓글이 등록되었습니다.", data: comment });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
     }
@@ -29,8 +19,8 @@ class CommentController {
   async getCommentByPostId(req: Request, res: Response) {
     try {
       // req의 params에서 데이터 가져옴
-      const { _id } = req.params;
-      const objectId = new mongoose.Types.ObjectId(_id);
+      const { postId } = req.params;
+      const objectId = new mongoose.Types.ObjectId(postId);
 
       const comment = await commentService.getCommentByPostId(objectId);
 
@@ -49,10 +39,9 @@ class CommentController {
 
       const objectId = new mongoose.Types.ObjectId(_id);
 
-      const updateComment = await commentService
-        .updateComment(objectId, commentData);
+      const updateComment = await commentService.updateComment(objectId, commentData);
 
-      res.status(200).json({ success: true, data: updateComment });
+      res.status(200).json({ success: true, message: "댓글이 수정되었습니다.", data: updateComment });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
     }
@@ -67,7 +56,7 @@ class CommentController {
 
       const deleteComment = await commentService.deleteComment(objectId);
 
-      res.status(200).json({ success: true, data: deleteComment });
+      res.status(200).json({ success: true, message: "댓글이 삭제되었습니다." });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
     }

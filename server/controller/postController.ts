@@ -44,6 +44,7 @@ class PostController {
     res.status(200).json({ success: true, message: "글 삭제가 완료되었습니다", data: deletePost });
   }
 
+  // 좋아요
   async likeHandle(req: Request, res: Response) {
     const { _id } = req.params;
     const { userId } = req.body;

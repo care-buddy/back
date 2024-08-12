@@ -9,17 +9,11 @@ export class CommentModel {
     return createNewComment;
   }
 
-  // 댓글 전체 조회
-  async findAll() {
-    const comments = await Comment.find({});
-    return comments;
-  }
-
   // 게시글당 댓글 조회
   async getCommentByPostId(postId: mongoose.Types.ObjectId) {
-    const comment = await Comment
-      .find({ postId })
-      .populate("userId");
+    const comment = await Comment.find({ postId })
+    .populate("userId")
+    .populate("postId");
     return comment;
   }
 
@@ -34,10 +28,7 @@ export class CommentModel {
 
   // 댓글 삭제
   async deleteComment(_id: mongoose.Types.ObjectId) {
-    const deletedComment = await Comment
-      .findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true })
-      .populate('userId')
-      .populate('postId');
+    const deletedComment = await Comment.findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true });
     return deletedComment;
   }
   

@@ -5,6 +5,7 @@ export interface checkPost {
   _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
   userId: Schema.Types.ObjectId;
   communityId: Schema.Types.ObjectId;
+  commentId: Schema.Types.ObjectId;
   title: string;
   content: string;
   deletedAt?: Date | null;
@@ -20,11 +21,15 @@ const PostSchema = new Schema(
       ref: "users",
       required: true
     },
-    communityId: {   //category 스키마를 참조해 categoryId 가져옴
+    communityId: {   //community 스키마를 참조해 categoryId 가져옴
       type: Schema.Types.ObjectId,
       ref: "communities",
       required: true
     },
+    commentId: [{   //comment 스키마를 참조해 commentId 가져옴
+      type: Schema.Types.ObjectId,
+      ref: "comments"
+    }],
     title: {     // 글제목
       type: String,
       required: true

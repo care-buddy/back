@@ -16,7 +16,7 @@ class PostService {
   // 글 생성
   async createPost(postData: checkPost) {
     const newPost = await this.postModel.createPost(postData)
-    const newDatas = await newPost.save()
+    const newDatas = await newPost.save();
     const user = await User.findById(newDatas.userId);
     if (user) {
       user.postId.push(newPost._id);
@@ -62,6 +62,8 @@ class PostService {
     if (!deletePost) return { status: 404, err: '해당 게시물이 없습니다.' }
     return deletePost;
   }
+
+  // 좋아요
   async likeChange(_id: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId) {
     const likeChange = await this.postModel.likeChange(_id, userId)
     return likeChange

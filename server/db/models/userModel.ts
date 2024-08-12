@@ -13,7 +13,8 @@ export class UserModel {
     const user = await User.findById({ _id })
       .populate('buddyId')
       .populate('postId')
-      .populate('communityId');
+      .populate('communityId')
+      .populate('commentId');
 
     return user;
   }
@@ -50,6 +51,7 @@ export class UserModel {
       .populate('buddyId')
       .populate('postId')
       .populate('communityId')
+      .populate('commentId');
     return user;
   }
 
@@ -60,6 +62,7 @@ export class UserModel {
       .populate('buddyId')
       .populate('postId')
       .populate('communityId')
+      .populate('commentId');
     console.log(_id);
     return deletedUser;
   }
