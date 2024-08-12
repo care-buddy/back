@@ -11,13 +11,13 @@ export class BuddyModel {
 
   // 전체 반려동물 조회
   async findAllBuddies(userId: mongoose.Types.ObjectId) {
-    const buddies = await Buddy.find({userId});
+    const buddies = await Buddy.find({ userId });
     return buddies;
   }
 
   // 반려동물 하나 조회
   async getBuddyById(_id: mongoose.Types.ObjectId) {
-    const buddy = await Buddy.find({_id});
+    const buddy = await Buddy.find({ _id });
     return buddy;
   }
 
@@ -29,7 +29,7 @@ export class BuddyModel {
 
   // 반려동물 삭제
   async deleteBuddy(_id: mongoose.Types.ObjectId) {
-    const result = await Buddy.findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true });
+    const result = await Buddy.findOneAndUpdate({ _id }, { deletedAt: new Date() }, { new: true });
     return result;
   }
 
@@ -37,7 +37,7 @@ export class BuddyModel {
   async updateBuddyImage(_id: mongoose.Types.ObjectId, buddyImage?: string) {
     const result = await Buddy.findOneAndUpdate(
       { _id },
-      { buddyImage }, 
+      { buddyImage },
       { new: true }
     );
     return result;

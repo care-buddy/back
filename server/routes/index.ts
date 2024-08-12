@@ -19,7 +19,7 @@ router.use('/api/user', userRouter);
 router.use('/api/communities', communityRouter);
 router.use('/api/buddies', buddyRouter);
 router.use('/api/post', postRouter);
-router.use('/api/hospital', hospitalRouter);
+router.use('/api/hospitals', hospitalRouter);
 router.use('/api/comments', commentRouter);
 router.use('/api/search', searchRouter);
 //router.use('/api/me', unAuth, userController.confirmUserMe); //추가

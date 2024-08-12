@@ -6,11 +6,12 @@ export interface checkHospital {
   buddyId?: Schema.Types.ObjectId;
   doctorName?: string | null;
   address?: string | null;
+  consultationStatus?: Date | null;
   consultationDate?: Date | null;
   hospitalizationStatus?: Date | null;
   disease?: String;
-  symptom?: string | null;
-  treatment?: string | null;
+  symptom?: string[] | null;
+  treatment?: string[] | null;
   memo?: string | null;
   deletedAt?: Date | null;
 }
@@ -35,25 +36,30 @@ const HospitalSchema = new Schema(
       type: String,
       default: null
     },
+    consultationStatus: {   // 진단 확인 여부 (데이터가 들어온 날을 저장. 데이터가 들어있으면 진단 받음.)
+      type: Date,
+      default: null
+    },
     consultationDate: {   // 상담 날짜/시간
       type: Date,
       default: null
     },
     hospitalizationStatus: {    // 입원 여부 (데이터가 들어온 날을 저장. 데이터가 들어있으면 입원함.)
       type: Date,
-      default: null},
+      default: null
+    },
     disease: {            // 질병
       type: String,
       default: true
     },
-    symptom: {            // 증상
+    symptom: [{            // 증상
       type: String,
       default: null
-    },
-    treatment: {          // 치료/처방
+    }],
+    treatment: [{          // 치료/처방
       type: String,
       default: null
-    },
+    }],
     memo: {               // 메모
       type: String,
       default: null

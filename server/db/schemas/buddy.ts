@@ -3,6 +3,7 @@ import { Schema, model } from 'mongoose';
 export interface checkBuddy {
   _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
   userId?: Schema.Types.ObjectId;
+  hospitalId?: Schema.Types.ObjectId;
   name?: string;
   buddyImage?: string[];
   species?: Number | null;
@@ -21,6 +22,12 @@ const BuddySchema = new Schema(
       ref: "users",
       required: true
     },
+    hospitalId: [
+      { //hospital 스키마를 참조해 hospitalId 가져옴
+      type: Schema.Types.ObjectId,
+      ref: "hospitals"
+      }
+    ],
     name: {       // 반려동물 이름
       type: String,
       default: true

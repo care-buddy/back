@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 import { checkCommunity } from './community';
 import { checkBuddy } from './buddy';
 import dotenv from 'dotenv';
+import { checkHospital } from './hospital';
 import { checkComment } from './comment';
 
 export interface checkUser {
@@ -15,6 +16,7 @@ export interface checkUser {
   refreshToken: String; 
   isTempPassword: Number;
   buddyId: checkBuddy;
+  hospitalId: checkHospital;
   communityId: checkCommunity;
   commentId: checkComment;
   deletedAt: Date;
@@ -67,9 +69,15 @@ const UserSchema = new Schema(
       ref: "comments"
     }],
     buddyId: [
-      { //category 스키마를 참조해 categoryId 가져옴
+      { //buddy 스키마를 참조해 categoryId 가져옴
       type: Schema.Types.ObjectId,
       ref: "buddies"
+      }
+    ],
+    hospitalId: [
+      { //hospital 스키마를 참조해 hospitalId 가져옴
+      type: Schema.Types.ObjectId,
+      ref: "hospitals"
       }
     ],
     communityId: [

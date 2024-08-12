@@ -7,9 +7,16 @@ class HospitalController {
   async createHospital(req: Request, res: Response) {
     try {
       const datas = req.body;
-      const newDate = new Date(req.body.consultationDate)
+      const newDate = datas.consultationDate;
 
-      const hospital = await hospitalService.createHospital(datas, newDate);
+      if (datas.consultationStatus != undefined || datas.consultationStatus != null) {
+        datas.consultationStatus = new Date();
+      }
+
+      const hospital = await hospitalService.createHospital({
+        ...datas,
+        consultationDate: new Date(newDate)
+      });
 
       res.status(201).json({ success: true, data: hospital });
     } catch (err: any) {
@@ -17,10 +24,11 @@ class HospitalController {
     }
   }
 
-  // 전체 병원 진료기록 조회
+  // 버디의 전체 병원 진료기록 조회
   async getAllHospital(req: Request, res: Response) {
     try {
-      const hospitals = await hospitalService.getAllHospitals();
+      const { buddyId } = req.body;
+      const hospitals = await hospitalService.getAllHospitals(buddyId);
 
       res.status(200).json({ success: true, message: hospitals });
     } catch (err: any) {
@@ -43,7 +51,6 @@ class HospitalController {
     }
   }
 
-  
   // 병원 진료기록 수정
   async updateHospital(req: Request, res: Response) {
     try {
