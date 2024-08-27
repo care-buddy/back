@@ -20,8 +20,10 @@ class BuddyController {
   // 반려동물 전체 조회
   async getAllBuddy(req: Request, res: Response) {
     try {
-      const { userId } = req.body;
-      const buddy = await buddyService.getAllBuddies(userId);
+      const { userId } = req.params;
+      const objectId = new mongoose.Types.ObjectId(userId);
+      
+      const buddy = await buddyService.getAllBuddies(objectId);
 
       res.status(200).json({ success: true, message: buddy });
     } catch (err: any) {

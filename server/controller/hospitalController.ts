@@ -27,8 +27,9 @@ class HospitalController {
   // 버디의 전체 병원 진료기록 조회
   async getAllHospital(req: Request, res: Response) {
     try {
-      const { buddyId } = req.body;
-      const hospitals = await hospitalService.getAllHospitals(buddyId);
+      const { buddyId } = req.params;
+      const objectId = new mongoose.Types.ObjectId(buddyId);
+      const hospitals = await hospitalService.getAllHospitals(objectId);
 
       res.status(200).json({ success: true, message: hospitals });
     } catch (err: any) {
