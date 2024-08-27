@@ -35,6 +35,7 @@ class AuthController {
   // 로그인
   async signIn(req: Request, res: Response) {
     const { email, password } = req.body;
+
     const user = await userService.getUserFromEmail(email);
 
     if (user === null) {
@@ -50,7 +51,7 @@ class AuthController {
       return res
         .status(400)
         .json({ message: '비밀번호가 설정되지 않았습니다.' });
-    }
+    } 
 
     const isPasswordValid = await verifyPassword(
       password,
@@ -59,17 +60,12 @@ class AuthController {
 
     if (!isPasswordValid) {
       return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
-    }
+    } 
 
-    res.status(200).json({
-      success: true,
-      message: '로그인 성공',
-    });
-
-    setUserToken(user, 0, res);
+    setUserToken(user, 0, res)
   }
 
-  // silent-refresh: refreshToken을 이용한 자동 로그인 연장
+  // silent-refresh: refreshToken을 이용한 자동 로그인 연장 
   async silentRefresh(req: Request, res: Response) {
     try {
       // 쿠키에서 refreshToken 추출
@@ -108,7 +104,7 @@ class AuthController {
       console.error(error);
       return res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
     }
-  }
+  } 
 
   // 로그아웃
   async logOut(req: Request, res: Response) {

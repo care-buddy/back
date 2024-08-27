@@ -19,3 +19,4 @@ buddyRouter.delete("/:_id/buddyImage", upload.single("buddyImage"), buddyControl
 
 
 export default buddyRouter;
+ 
