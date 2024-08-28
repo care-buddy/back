@@ -36,7 +36,7 @@ class AuthController {
   async signIn(req: Request, res: Response) {
     const { email, password } = req.body;
 
-    const user = await userService.getUserFromEmail(email);
+    const user = await userService.getUserFromEmailForLogin(email);
 
     if (user === null) {
       return res.status(400).json({ message: '계정이 존재하지 않습니다.' });
@@ -51,7 +51,7 @@ class AuthController {
       return res
         .status(400)
         .json({ message: '비밀번호가 설정되지 않았습니다.' });
-    } 
+    }
 
     const isPasswordValid = await verifyPassword(
       password,
@@ -60,12 +60,12 @@ class AuthController {
 
     if (!isPasswordValid) {
       return res.status(400).json({ message: '비밀번호가 틀렸습니다.' });
-    } 
+    }
 
-    setUserToken(user, 0, res)
+    setUserToken(user, 0, res);
   }
 
-  // silent-refresh: refreshToken을 이용한 자동 로그인 연장 
+  // silent-refresh: refreshToken을 이용한 자동 로그인 연장
   async silentRefresh(req: Request, res: Response) {
     try {
       // 쿠키에서 refreshToken 추출
@@ -85,9 +85,17 @@ class AuthController {
       const decoded: any = jwt.verify(refreshToken, refreshSecret);
 
       // 유저 정보 가져오기
-      const user = await userService.getUserFromEmail(decoded.email);
+      const user = await userService.getUserFromEmailForLogin(decoded.email);
       if (!user) {
         return res.status(401).json({ message: '유효하지 않은 사용자입니다.' });
+      }
+
+      console.log(refreshToken, user.refreshToken);
+      // 유저의 refreshToken이 DB에 저장된 것과 일치하는지 확인
+      if (user.refreshToken !== refreshToken) {
+        return res
+          .status(401)
+          .json({ message: '사용자의 refresh token이 유효하지 않습니다.' });
       }
 
       // 일정 기간이 지난 경우에만 새로운 refreshToken 발급
@@ -101,10 +109,10 @@ class AuthController {
         setUserToken(user, 1, res); // isOnlyAccess를 1로 설정해 기존 refreshToken 사용
       }
     } catch (error) {
-      console.error(error);
+      console.error('Silent refresh error:', error);
       return res.status(401).json({ message: '유효하지 않은 토큰입니다.' });
     }
-  } 
+  }
 
   // 로그아웃
   async logOut(req: Request, res: Response) {

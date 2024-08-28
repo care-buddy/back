@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import { User, checkUser } from "../schemas/user";
+import mongoose from 'mongoose';
+import { User, checkUser } from '../schemas/user';
 
 export class UserModel {
   // 유저 정보 등록 (로그인 시 최초 저장)
@@ -9,7 +9,8 @@ export class UserModel {
   }
 
   // userId로 사용자 조회
-  async findByUserId(_id: mongoose.Types.ObjectId) { // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
+  async findByUserId(_id: mongoose.Types.ObjectId) {
+    // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
     const user = await User.findById({ _id })
       .populate('buddyId')
       .populate('postId')
@@ -21,27 +22,40 @@ export class UserModel {
 
   // 유저 이메일로 사용자 조회
   async findByEmail(email: string) {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
+    return user;
+  }
+
+  // 유저 이메일로 사용자 조회(로그인을 위해서 refreshToken반환)
+  async findByEmailForLogin(email: string) {
+    const user = await User.findOne({ email }).select('+refreshToken');
     return user;
   }
 
   // 유저 이메일로 사용자 조회 후 비밀번호 검증
   async findByEmailForPW(email: string) {
-    const userPassword = await User.findOne({ email }, "password");
+    const userPassword = await User.findOne({ email }, 'password');
     return userPassword;
   }
 
   async userForToken(email: string) {
     const user = await User.findOne(
       { email },
-			{ nickName: 1, name: 1, email: 1, profileImage: 1, isAdmin: 1, isTempPassword: 1,}
+      {
+        nickName: 1,
+        name: 1,
+        email: 1,
+        profileImage: 1,
+        isAdmin: 1,
+        isTempPassword: 1,
+      },
     );
     console.log(`UserModel_userForToken_user: ${user}`);
     return user;
   }
 
   async userRefreshToken(email: string) {
-    const user = await User.findOne({ email }, "refreshToken");
+    const user = await User.findOne({ email }, 'refreshToken');
     return user;
   }
 
@@ -57,8 +71,11 @@ export class UserModel {
 
   // 회원 정보 삭제
   async deleteUser(_id: mongoose.Types.ObjectId) {
-    const deletedUser = await User
-      .findOneAndUpdate({ _id }, {deletedAt: new Date()}, { new: true })
+    const deletedUser = await User.findOneAndUpdate(
+      { _id },
+      { deletedAt: new Date() },
+      { new: true },
+    )
       .populate('buddyId')
       .populate('postId')
       .populate('communityId')
@@ -71,8 +88,8 @@ export class UserModel {
   async updateProfileImage(email: string, profileImage?: string) {
     const result = await User.findOneAndUpdate(
       { email },
-      { profileImage }, 
-      { new: true }
+      { profileImage },
+      { new: true },
     );
     return result;
   }
