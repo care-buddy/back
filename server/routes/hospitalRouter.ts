@@ -11,4 +11,4 @@ hospitalRouter.get("/:_id", hospitalController.getHospitalById);  // 병원 진�
 hospitalRouter.put("/:_id", hospitalController.updateHospital);
 hospitalRouter.put("/:_id/d", hospitalController.deleteHospital);
 
-export default hospitalRouter;
+export default hospitalRouter; 
