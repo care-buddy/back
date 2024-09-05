@@ -7,9 +7,8 @@ class BuddyController {
   async createBuddy(req: Request, res: Response) {
     try {
       const datas = req.body;
-      const birthDate = datas.birth;
 
-      const buddy = await buddyService.createBuddy({ ...datas, birth: new Date(birthDate) });
+      const buddy = await buddyService.createBuddy(datas);
 
       res.status(201).json({ success: true, data: buddy._id });
     } catch (err: any) {
