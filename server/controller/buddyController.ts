@@ -27,6 +27,8 @@ class BuddyController {
         return;
       }
 
+      console.log(userId);
+
       const buddies = await buddyService.getAllBuddies(userId);
 
         res.status(200).json({ success: true, message: buddies });

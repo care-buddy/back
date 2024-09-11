@@ -5,7 +5,7 @@ export interface checkBuddy {
   userId?: mongoose.Types.ObjectId;
   hospitalId?: mongoose.Types.ObjectId[];
   name?: string;
-  buddyImage?: string[];
+  buddyImage?: string;
   species?: Number | null;
   kind?: string | null;
   birth?: String | null;
@@ -33,7 +33,7 @@ const BuddySchema = new Schema(
       default: true
     },
     buddyImage: { // 프로필 사진
-      type: [String],
+      type: String,
       default: "public/defaultbuddyImage.png"
     },
     species: {    // 종 (0: 강아지, 1: 고양이)

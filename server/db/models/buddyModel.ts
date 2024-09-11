@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Buddy, checkBuddy } from "../schemas/buddy";
+import { User, checkUser } from "../schemas/user";
 
 export class BuddyModel {
   // 반려동물 등록
@@ -11,8 +12,26 @@ export class BuddyModel {
 
   // 전체 반려동물 조회
   async findAllBuddies(userId: mongoose.Types.ObjectId) {
-    const buddies = await Buddy.find({ userId });
+    const buddiesAllContent = await Buddy.find({ userId });
+    const buddies = buddiesAllContent.map((buddies) => ({
+      _id: buddies._id,
+      name: buddies.name,
+      kind: buddies.kind,
+      birth: buddies.birth, 
+      buddyImage: buddies.buddyImage, 
+      createdAt: buddies.createdAt,
+      deletedAt: buddies.deletedAt
+    }))
+    
     return buddies;
+  }
+  
+  // 반려동물의 주인 조회
+  async findUser(_id: mongoose.Types.ObjectId) {
+    const user = await User.findById({ _id });
+    const userName = user?.nickName;
+
+    return userName;
   }
 
   // 반려동물 하나 조회

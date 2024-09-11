@@ -28,6 +28,7 @@ class BuddyyService {
   // 전체 반려동물 조회
   async getAllBuddies(userId: mongoose.Types.ObjectId) {
     const user = await this.userModel.findByUserId(userId);
+    const userName = await this.buddyModel.findUser(userId);
     const buddies = await this.buddyModel.findAllBuddies(userId);
 
     if (!user) {
@@ -36,7 +37,7 @@ class BuddyyService {
       return { status: 404, err: '작업에 필요한 동물이 없습니다.' }
     }
 
-    return buddies;
+    return { userName, buddies };
   }
 
   // 반려동물 하나 조회
