@@ -116,10 +116,9 @@ class AuthController {
 
   // 로그아웃
   async logOut(req: Request, res: Response) {
-    const { email } = req.body;
-
+    // const email = req.user?.email;
     try {
-      await userService.invalidateRefreshToken(email);
+      res.cookie('refreshToken', null, { maxAge: 0 });
       res.status(200).json({ message: '로그아웃 성공!!' });
     } catch (error) {
       res.status(500).json({ message: '로그아웃 중 오류 발생' });

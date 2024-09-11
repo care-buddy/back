@@ -7,7 +7,7 @@ const buddyRouter = Router();
 // 삭제는 put 으로
 
 buddyRouter.post("/", buddyController.createBuddy);  // 반려동물 등록
-buddyRouter.get("/:userId", buddyController.getAllBuddy);    // 회원의 모든 반려동물 조회
+buddyRouter.get("/", buddyController.getAllBuddy);    // 회원의 모든 반려동물 조회
 buddyRouter.get("/:_id", buddyController.getBuddyById);   // 회원의 반려동물 1마리 조회
 buddyRouter.put("/:_id", buddyController.updateBuddy);    // 반려동물 정보 수정
 buddyRouter.put("/:_id/d", buddyController.deleteBuddy);    // 반려동물 삭제

@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import { checkCommunity } from './community';
 import { checkBuddy } from './buddy';
 import dotenv from 'dotenv';
@@ -6,20 +6,20 @@ import { checkHospital } from './hospital';
 import { checkComment } from './comment';
 
 export interface checkUser {
-  _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
-  nickName: string;
-  email: string;
-  password: string;
+  _id?: mongoose.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
+  nickName?: string;
+  email?: string;
+  password?: string;
   profileImage?: string[];
   introduce?: string;
-  adminNumber: number;
-  refreshToken: String;
-  isTempPassword: Number;
-  buddyId: checkBuddy;
-  hospitalId: checkHospital;
-  communityId: checkCommunity;
-  commentId: checkComment;
-  deletedAt: Date;
+  adminNumber?: number;
+  refreshToken?: string | null;
+  isTempPassword?: Number;
+  buddyId?: mongoose.Types.ObjectId[];
+  hospitalId?: mongoose.Types.ObjectId[];
+  communityId?: mongoose.Types.ObjectId[];
+  commentId?: mongoose.Types.ObjectId;
+  deletedAt?: Date;
 }
 
 const UserSchema = new Schema(

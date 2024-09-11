@@ -20,7 +20,7 @@ router.use('/api/buddies', getUserToken, buddyRouter);
 router.use('/api/posts', postRouter);
 router.use('/api/hospitals', getUserToken, hospitalRouter);
 router.use('/api/comments', commentRouter);
-router.use('/api/searchs', searchRouter);
+router.use('/api/searches', searchRouter);
 //router.use('/api/me', unAuth, userController.confirmUserMe); //추가
 
 export default router;

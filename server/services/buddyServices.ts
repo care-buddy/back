@@ -42,6 +42,9 @@ class BuddyyService {
   // 반려동물 하나 조회
   async getBuddyById(_id: mongoose.Types.ObjectId) {
     const buddy = await this.buddyModel.getBuddyById(_id);
+    if (!buddy) {
+      return { status: 404, err: '작업에 필요한 동물이 없습니다.' }
+    }
     return buddy;
   }
 
