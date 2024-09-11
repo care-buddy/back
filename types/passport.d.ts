@@ -79,7 +79,7 @@ declare global {
 }
 
 import express = require("express");
-import { checkUser } from "./server/db/schemas/user";
+import { checkUser } from "../server/db/schemas/user";
 
 declare namespace passport {
     type DoneCallback = (err: any, user?: Express.User | false | null) => void;
