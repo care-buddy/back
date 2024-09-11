@@ -59,26 +59,28 @@ class BuddyController {
         // req의 params과 body에서 데이터 가져옴
         const { _id } = req.params;   // buddyId
         const {
-          buddyImage,
+          name,
           species,
           kind,
           birth,
           sex,
           weight,
           isNeutered,
+          buddyImage,
           deletedAt
         } = req.body;
 
         const objectId = new mongoose.Types.ObjectId(_id);
 
         const updateBuddy = await buddyService.updateBuddy(objectId, {
-          buddyImage,
+          name,
           species,
           kind,
           birth,
           sex,
           weight,
           isNeutered,
+          buddyImage,
           deletedAt
         });
 

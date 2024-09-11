@@ -58,7 +58,7 @@ const BuddySchema = new Schema(
     },
     isNeutered: {   // 중성화 여부
       type: Boolean,
-      default: null
+      default: false  // false: 중성화 X, true: 중성화 O
     },
     deletedAt: { // 유저 화면에 보여주나 실제로 삭제되면 안됨
       type: Date,

@@ -50,17 +50,11 @@ class BuddyyService {
   }
 
   // 반려동물 정보 수정
-  async updateBuddy(_id: mongoose.Types.ObjectId, checkBuddy: checkBuddy) {
-    let updateData: Partial<checkBuddy> = checkBuddy;
-
-    if (checkBuddy.isNeutered !== undefined) {
-      // isNeutered가 변경된 경우에만 updatedAt 필드를 업데이트
-      updateData.isNeutered = new Date();
-    }
-
+  async updateBuddy(_id: mongoose.Types.ObjectId, updateData: checkBuddy) {
     const foundBuddy = await this.buddyModel.updateBuddy(_id, updateData);
-    if (!foundBuddy)
-      return { status: 404, err: '작업에 필요한 반려동물이 없습니다.' };
+    if (!foundBuddy) {
+      return { status: 400, err: '작업에 필요한 반려동물이 없습니다.' }
+    };
 
     const users = await User.find({ buddyId: { $elemMatch: { $eq: _id } } });
     console.log(users);
