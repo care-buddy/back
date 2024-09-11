@@ -9,6 +9,14 @@ export class BuddyModel {
 
     return createNewBuddies;
   }
+  
+  // 반려동물의 주인 조회
+  async findUser(_id: mongoose.Types.ObjectId) {
+    const user = await User.findById({ _id });
+    const userName = user?.nickName;
+
+    return userName;
+  }
 
   // 전체 반려동물 조회
   async findAllBuddies(userId: mongoose.Types.ObjectId) {
@@ -21,22 +29,28 @@ export class BuddyModel {
       buddyImage: buddies.buddyImage, 
       createdAt: buddies.createdAt,
       deletedAt: buddies.deletedAt
-    }))
+    }));
     
     return buddies;
-  }
-  
-  // 반려동물의 주인 조회
-  async findUser(_id: mongoose.Types.ObjectId) {
-    const user = await User.findById({ _id });
-    const userName = user?.nickName;
-
-    return userName;
   }
 
   // 반려동물 하나 조회
   async getBuddyById(_id: mongoose.Types.ObjectId) {
-    const buddy = await Buddy.find({ _id });
+    const buddyAllContent = await Buddy.find({ _id });
+    const buddy = buddyAllContent.map((buddy) => ({
+      _id: buddy._id,
+      name: buddy.name,
+      species: buddy.species,
+      kind: buddy.kind,
+      weight: buddy.weight,
+      birth: buddy.birth,
+      sex: buddy.sex,
+      isNeutered: buddy.isNeutered,
+      buddyImage: buddy.buddyImage,
+      createdAt: buddy.createdAt,
+      updatedAt: buddy.updatedAt,
+      deletedAt: buddy.deletedAt
+    }));
     return buddy;
   }
 

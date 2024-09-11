@@ -16,7 +16,10 @@ class CommunityService {
 
   // 전체 커뮤니티 조회
   async confirmAllCommunities() {
-    const communities = await this.communityModel.findAllCommunities()
+    const communities = await this.communityModel.findAllCommunities();
+    if (!communities) {
+      return { status: 404, err: '작업에 필요한 커뮤니티가 없습니다.' }
+    }
     return communities;
   }
 }
