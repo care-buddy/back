@@ -1,11 +1,11 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 export interface checkComment {
-  _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
-  userId: Schema.Types.ObjectId;
-  postId: Schema.Types.ObjectId;
-  text: string;
-  deletedAt: Date | null;
+  _id?: mongoose.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
+  userId?: mongoose.Types.ObjectId;
+  postId?: mongoose.Types.ObjectId;
+  text?: string;
+  deletedAt?: Date | null;
 }
 
 const CommentSchema = new Schema(
