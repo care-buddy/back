@@ -41,26 +41,34 @@ export class PostModel {
     return deletepost;
   }
 
-  // 좋아요
   async likeChange(_id: mongoose.Types.ObjectId, userId: mongoose.Types.ObjectId) {
     const post = await Post.findById(_id);
     if (!post) return { status: 404, err: '작업에 필요한 게시글이 없습니다.' }
-
+  
     const alreadyLiked = post.likedUsers.includes(userId);
-    let numberOfLikes;
-
+    let updatedPost;
+    
     if (alreadyLiked) {
       // 이미 좋아요를 누른 상태이므로 좋아요를 제거
-      await Post.findByIdAndUpdate(_id, { $pull: { likedUsers: userId } });
-      numberOfLikes = post.likedUsers.length - 1;
+      updatedPost = await Post.findByIdAndUpdate(
+        _id, 
+        { $pull: { likedUsers: userId } }, 
+        { new: true }  
+      );
     } else {
       // 아직 좋아요를 누르지 않은 상태이므로 좋아요를 추가
-      await Post.findByIdAndUpdate(_id, { $push: { likedUsers: userId } });
-      numberOfLikes = post.likedUsers.length + 1;
+      updatedPost = await Post.findByIdAndUpdate(
+        _id, 
+        { $push: { likedUsers: userId } }, 
+        { new: true }  
+      );
     }
-    post.save()
-    return numberOfLikes;
+  
+    // 최종적으로 변경된 likedUsers 배열의 길이를 반환
+    const LikesArray = updatedPost?.likedUsers;
+    return LikesArray;
   }
+  
 
   // 프로필 사진 등록
   async updatePostImage(_id: mongoose.Types.ObjectId, postImage?: string) {

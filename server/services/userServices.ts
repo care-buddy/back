@@ -32,9 +32,21 @@ class UserService {
     return user;
   }
 
-  // 유저 이메일 조회
+  // // 유저 이메일 조회
+  // async getUserFromEmail(email: string) {
+  //   const user = await userModel.findByEmail(email);
+  //   return user;
+  // }
+
   async getUserFromEmail(email: string) {
+    // 이메일로 사용자 찾기
     const user = await userModel.findByEmail(email);
+    return user;
+  }
+
+  async getUserFromEmailForLogin(email: string) {
+    // 이메일로 사용자 찾기(로그인용 - refreshToken 반환)
+    const user = await userModel.findByEmailForLogin(email);
     return user;
   }
 
