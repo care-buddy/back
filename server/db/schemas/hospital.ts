@@ -6,9 +6,9 @@ export interface checkHospital {
   buddyId?: Schema.Types.ObjectId;
   doctorName?: string | null;
   address?: string | null;
-  consultationStatus?: Date | null;
+  consultationStatus?: boolean | null;
   consultationDate?: Date | null;
-  hospitalizationStatus?: Date | null;
+  hospitalizationStatus?: boolean | null;
   disease?: String;
   symptom?: string[] | null;
   treatment?: string[] | null;
@@ -18,62 +18,78 @@ export interface checkHospital {
 
 const HospitalSchema = new Schema(
   {
-    userId: {   //user 스키마를 참조해 userId 가져옴
+    userId: {
+      //user 스키마를 참조해 userId 가져옴
       type: Schema.Types.ObjectId,
-      ref: "users",
-      required: true
+      ref: 'users',
+      required: true,
     },
-    buddyId: {   //buddy 스키마를 참조해 buddyId 가져옴
+    buddyId: {
+      //buddy 스키마를 참조해 buddyId 가져옴
       type: Schema.Types.ObjectId,
-      ref: "buddies",
-      required: true
+      ref: 'buddies',
+      required: true,
     },
-    doctorName: {       // 의사 이름
+    doctorName: {
+      // 의사 이름
       type: String,
-      default: null
+      default: null,
     },
-    address: {          // 병원 주소
+    address: {
+      // 병원 주소
       type: String,
-      default: null
+      default: null,
     },
-    consultationStatus: {   // 진단 확인 여부 (데이터가 들어온 날을 저장. 데이터가 들어있으면 진단 받음.)
+    consultationStatus: {
+      // 진단 확인 여부 (데이터가 들어온 날을 저장. 데이터가 들어있으면 진단 받음.)
+      type: Boolean,
+      default: null,
+    },
+    consultationDate: {
+      // 상담 날짜/시간
       type: Date,
-      default: null
+      default: null,
     },
-    consultationDate: {   // 상담 날짜/시간
+    hospitalizationStatus: {
+      // 입원 여부 (데이터가 들어온 날을 저장. 데이터가 들어있으면 입원함.)
+      type: Boolean,
+      default: null,
+    },
+    disease: {
+      // 질병
+      type: String,
+      default: true,
+    },
+    symptom: [
+      {
+        // 증상
+        type: String,
+        default: null,
+      },
+    ],
+    treatment: [
+      {
+        // 치료/처방
+        type: String,
+        default: null,
+      },
+    ],
+    memo: {
+      // 메모
+      type: String,
+      default: null,
+    },
+    deletedAt: {
+      // 유저 화면에 보여주나 실제로 삭제되면 안됨
       type: Date,
-      default: null
-    },
-    hospitalizationStatus: {    // 입원 여부 (데이터가 들어온 날을 저장. 데이터가 들어있으면 입원함.)
-      type: Date,
-      default: null
-    },
-    disease: {            // 질병
-      type: String,
-      default: true
-    },
-    symptom: [{            // 증상
-      type: String,
-      default: null
-    }],
-    treatment: [{          // 치료/처방
-      type: String,
-      default: null
-    }],
-    memo: {               // 메모
-      type: String,
-      default: null
-    },
-    deletedAt: { // 유저 화면에 보여주나 실제로 삭제되면 안됨
-      type: Date,
-      default: null
+      default: null,
     },
   },
   {
     versionKey: false,
     timestamps: true, // 등록 업데이트 자동 생성
-    collection: "hospitals"
+    collection: 'hospitals',
   },
 );
 
-export const Hospital = model('hospitals', HospitalSchema)
+export const Hospital = model('hospitals', HospitalSchema);
