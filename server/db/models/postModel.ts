@@ -9,8 +9,8 @@ export class PostModel {
   }
 
   // 전체 글 조회
-  async findAllPosts(userId: mongoose.Types.ObjectId) {
-    const posts = await Post.find({userId})
+  async findAllPosts() {
+    const posts = await Post.find({})
     .populate('userId')
     .populate('communityId')
     .populate('commentId');
