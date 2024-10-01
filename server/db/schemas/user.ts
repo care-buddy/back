@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 import { checkCommunity } from './community';
 import { checkBuddy } from './buddy';
 import dotenv from 'dotenv';
@@ -6,96 +6,107 @@ import { checkHospital } from './hospital';
 import { checkComment } from './comment';
 
 export interface checkUser {
-  _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
-  nickName: string;
-  email: string;
-  password: string;
+  _id?: mongoose.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
+  nickName?: string;
+  email?: string;
+  password?: string;
   profileImage?: string[];
   introduce?: string;
-  adminNumber: number;
-  refreshToken: String; 
-  isTempPassword: Number;
-  buddyId: checkBuddy;
-  hospitalId: checkHospital;
-  communityId: checkCommunity;
-  commentId: checkComment;
-  deletedAt: Date;
+  adminNumber?: number;
+  refreshToken?: string | null;
+  isTempPassword?: Number;
+  buddyId?: mongoose.Types.ObjectId[];
+  hospitalId?: mongoose.Types.ObjectId[];
+  communityId?: mongoose.Types.ObjectId[];
+  commentId?: mongoose.Types.ObjectId;
+  deletedAt?: Date;
 }
 
 const UserSchema = new Schema(
   {
-    nickName: { // 회원 이름 (별명)
+    nickName: {
+      // 회원 이름 (별명)
       type: String,
-      required: true
+      required: true,
     },
-    email: { // 이메일 (아이디)
+    email: {
+      // 이메일 (아이디)
       type: String,
-      required: true
+      required: true,
     },
     //사용자 비밀번호
     password: {
       type: String,
-      required: true  //소셜 로그인 넣을 경우에는 false
+      required: true, //소셜 로그인 넣을 경우에는 false
     },
-    profileImage:{   // 프로필 사진
+    profileImage: {
+      // 프로필 사진
       type: [String],
-      default: "public/defaultprofileImage.png"
+      default: 'public/defaultprofileImage.png',
     },
-    introduce:{     // 소개글
+    introduce: {
+      // 소개글
       type: String,
-      default: ""
-    }, 
-    adminNumber: { // 관리자 여부
+      default: '',
+    },
+    adminNumber: {
+      // 관리자 여부
       type: Number,
       default: 0,
-      required: true
-    }, 
+      required: true,
+    },
     refreshToken: {
-			type: String,
-			select: false
-		},
-		isTempPassword: {
+      type: String,
+      select: false,
+    },
+    isTempPassword: {
       type: Number,
-      default: 0
-		},
+      default: 0,
+    },
     postId: [
       {
-      type: Schema.Types.ObjectId,
-      ref: "posts"
-      }
+        type: Schema.Types.ObjectId,
+        ref: 'posts',
+      },
     ],
-    commentId: [{   //comment 스키마를 참조해 commentId 가져옴
-      type: Schema.Types.ObjectId,
-      ref: "comments"
-    }],
+    commentId: [
+      {
+        //comment 스키마를 참조해 commentId 가져옴
+        type: Schema.Types.ObjectId,
+        ref: 'comments',
+      },
+    ],
     buddyId: [
-      { //buddy 스키마를 참조해 categoryId 가져옴
-      type: Schema.Types.ObjectId,
-      ref: "buddies"
-      }
+      {
+        //buddy 스키마를 참조해 categoryId 가져옴
+        type: Schema.Types.ObjectId,
+        ref: 'buddies',
+      },
     ],
     hospitalId: [
-      { //hospital 스키마를 참조해 hospitalId 가져옴
-      type: Schema.Types.ObjectId,
-      ref: "hospitals"
-      }
+      {
+        //hospital 스키마를 참조해 hospitalId 가져옴
+        type: Schema.Types.ObjectId,
+        ref: 'hospitals',
+      },
     ],
     communityId: [
       {
-      type: Schema.Types.ObjectId,
-      ref: "communities"
-      }
+        type: Schema.Types.ObjectId,
+        ref: 'communities',
+      },
     ],
-    deletedAt: { // 유저 화면에 보여주나 실제로 삭제되면 안됨
+    deletedAt: {
+      // 유저 화면에 보여주나 실제로 삭제되면 안됨
       type: Date,
-      default: null
+      default: null,
     },
   },
   {
     versionKey: false,
     timestamps: true, // 등록 업데이트 자동 생성
-    collection: "users"
+    collection: 'users',
   },
 );
 
-export const User = model('users', UserSchema)
+export const User = model('users', UserSchema);

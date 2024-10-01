@@ -28,6 +28,7 @@ class BuddyyService {
   // 전체 반려동물 조회
   async getAllBuddies(userId: mongoose.Types.ObjectId) {
     const user = await this.userModel.findByUserId(userId);
+    const userName = await this.buddyModel.findUser(userId);
     const buddies = await this.buddyModel.findAllBuddies(userId);
 
     if (!user) {
@@ -36,27 +37,24 @@ class BuddyyService {
       return { status: 404, err: '작업에 필요한 동물이 없습니다.' }
     }
 
-    return buddies;
+    return { userName, buddies };
   }
 
   // 반려동물 하나 조회
   async getBuddyById(_id: mongoose.Types.ObjectId) {
     const buddy = await this.buddyModel.getBuddyById(_id);
+    if (!buddy) {
+      return { status: 404, err: '작업에 필요한 동물이 없습니다.' }
+    }
     return buddy;
   }
 
   // 반려동물 정보 수정
-  async updateBuddy(_id: mongoose.Types.ObjectId, checkBuddy: checkBuddy) {
-    let updateData: Partial<checkBuddy> = checkBuddy;
-
-    if (checkBuddy.isNeutered !== undefined) {
-      // isNeutered가 변경된 경우에만 updatedAt 필드를 업데이트
-      updateData.isNeutered = new Date();
-    }
-
+  async updateBuddy(_id: mongoose.Types.ObjectId, updateData: checkBuddy) {
     const foundBuddy = await this.buddyModel.updateBuddy(_id, updateData);
-    if (!foundBuddy)
-      return { status: 404, err: '작업에 필요한 반려동물이 없습니다.' };
+    if (!foundBuddy) {
+      return { status: 400, err: '작업에 필요한 반려동물이 없습니다.' }
+    };
 
     const users = await User.find({ buddyId: { $elemMatch: { $eq: _id } } });
     console.log(users);

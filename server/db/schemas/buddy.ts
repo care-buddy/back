@@ -1,14 +1,14 @@
-import { Schema, model } from 'mongoose';
+import mongoose, { Schema, model } from 'mongoose';
 
 export interface checkBuddy {
-  _id?: Schema.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
-  userId?: Schema.Types.ObjectId;
-  hospitalId?: Schema.Types.ObjectId;
+  _id?: mongoose.Types.ObjectId; // mongoDB 자동 생성되는 것 오버라이딩
+  userId?: mongoose.Types.ObjectId;
+  hospitalId?: mongoose.Types.ObjectId[];
   name?: string;
-  buddyImage?: string[];
+  buddyImage?: string;
   species?: Number | null;
   kind?: string | null;
-  birth?: Date | null;
+  birth?: String | null;
   sex?: number | null;
   weight?: number | null;
   isNeutered?: Date | null;
@@ -52,7 +52,7 @@ const BuddySchema = new Schema(
     },
     birth: {
       // 생년월일
-      type: Date,
+      type: String,
       default: null,
     },
     sex: {
@@ -67,8 +67,8 @@ const BuddySchema = new Schema(
     },
     isNeutered: {
       // 중성화 여부
-      type: Date,
-      default: null,
+      type: Boolean,
+      default: false, // false: 중성화 X, true: 중성화 O
     },
     deletedAt: {
       // 유저 화면에 보여주나 실제로 삭제되면 안됨

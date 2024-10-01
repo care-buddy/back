@@ -15,13 +15,15 @@ app.use(express.json());
 // Passport 초기화
 app.use(passport.initialize());
 
-app.use(cors({ 
-  origin: '*', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'cookie'], // Authorization 헤더를 허용
-  exposedHeaders: '*',
-  credentials: true 
-}));
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // 임시(도메인을 설정해야 httpOnly로 쿠키를 보낼 수 있음)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'cookie'], // Authorization 헤더를 허용
+    exposedHeaders: '*',
+    credentials: true,
+  }),
+);
 
 app.use('/uploads', express.static('uploads'));
 

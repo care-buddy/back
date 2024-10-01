@@ -11,8 +11,7 @@ class BuddyController {
   async createBuddy(req: Request, res: Response) {
     try {
       // 기존 변수
-      // const datas = req.body;
-      // const birthDate = datas.birth;
+      const userId = req.user?._id;
       const { birth, image, ...datas } = req.body;
 
       // postman 테스트 용으로 만들어 둔 날짜 변환 로직
@@ -44,7 +43,7 @@ class BuddyController {
 
       const buddy = await buddyService.createBuddy({
         ...datas,
-        birth: birthDate,
+        userId,
         buddyImage: imageUrl, // S3 URL
       });
 
@@ -57,10 +56,18 @@ class BuddyController {
   // 반려동물 전체 조회
   async getAllBuddy(req: Request, res: Response) {
     try {
-      const { userId } = req.body;
-      const buddy = await buddyService.getAllBuddies(userId);
+      const userId = req.user?._id;
 
-      res.status(200).json({ success: true, message: buddy });
+      if (!userId) {
+        res.status(400).send({ message: '유저 정보를 찾을 수 없습니다.' });
+        return;
+      }
+
+      console.log(userId);
+
+      const buddies = await buddyService.getAllBuddies(userId);
+
+      res.status(200).json({ success: true, message: buddies });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
     }
@@ -71,6 +78,7 @@ class BuddyController {
     try {
       // req의 params에서 데이터 가져옴
       const { _id } = req.params;
+
       const objectId = new mongoose.Types.ObjectId(_id);
 
       const buddy = await buddyService.getBuddyById(objectId);
@@ -85,28 +93,30 @@ class BuddyController {
   async updateBuddy(req: Request, res: Response) {
     try {
       // req의 params과 body에서 데이터 가져옴
-      const { _id } = req.params;
+      const { _id } = req.params; // buddyId
       const {
-        buddyImage,
+        name,
         species,
         kind,
         birth,
         sex,
         weight,
         isNeutered,
+        buddyImage,
         deletedAt,
       } = req.body;
 
       const objectId = new mongoose.Types.ObjectId(_id);
 
       const updateBuddy = await buddyService.updateBuddy(objectId, {
-        buddyImage,
+        name,
         species,
         kind,
         birth,
         sex,
         weight,
         isNeutered,
+        buddyImage,
         deletedAt,
       });
 
