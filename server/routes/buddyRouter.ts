@@ -17,7 +17,11 @@ buddyRouter.post(
 ); // 반려동물 등록
 buddyRouter.get('/', buddyController.getAllBuddy); // 회원의 모든 반려동물 조회
 buddyRouter.get('/:_id', buddyController.getBuddyById); // 회원의 반려동물 1마리 조회
-buddyRouter.put('/:_id', buddyController.updateBuddy); // 반려동물 정보 수정
+buddyRouter.put(
+  '/:_id',
+  uploader.single('buddyImage'),
+  buddyController.updateBuddy,
+); // 반려동물 정보 수정
 buddyRouter.put('/:_id/d', buddyController.deleteBuddy); // 반려동물 삭제
 
 // 프로필 사진 등록
@@ -34,4 +38,3 @@ buddyRouter.delete(
 );
 
 export default buddyRouter;
- 
