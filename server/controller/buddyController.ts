@@ -12,20 +12,7 @@ class BuddyController {
     try {
       // 기존 변수
       const userId = req.user?._id;
-      const { birth, image, ...datas } = req.body;
-
-      // postman 테스트 용으로 만들어 둔 날짜 변환 로직
-      // 년(birthYear), 월(birthMonth), 일(birthDay) 로 필드 변경 시, 그에 맞게 변환 필요할 것 같습니다
-      let birthDate: Date | null = null;
-      if (birth) {
-        const parsedDate = new Date(birth);
-        if (!isNaN(parsedDate.getTime())) {
-          // 유효한 날짜인지 확인
-          birthDate = parsedDate;
-        } else {
-          throw new Error('Invalid date format provided.');
-        }
-      }
+      const { ...datas } = req.body;
 
       // 이미지 업로드 처리
       let imageUrl: string | null = null;
@@ -33,6 +20,7 @@ class BuddyController {
        그런데, multer-s3를 사용하여 파일을 업로드하면 s3에 업로드 된 후의 URL을 location 속성에 추가시켜 줍니다. 
        따라서 이 req.file이 위에서 생성한 interface의 FileWithLocation 타입이라고 알려줍니다. (타입캐스팅, 알려주지 않으면 인지하지 못함) */
       const file = req.file as FileWithLocation;
+      console.log('Uploaded file:', file);
 
       // 파일이고, URL이 있을 때에만 imageUrl 지정
       // 클라에서 프로필 사진 업로드하지 않은 경우에는, file을 첨부하지 않음
@@ -108,6 +96,21 @@ class BuddyController {
 
       const objectId = new mongoose.Types.ObjectId(_id);
 
+      // 이미지 업로드 처리
+      let imageUrl: string | null = null;
+      /* Multer 사용하여 파일 업로드 시, req.file의 타입은 Express.Multer.File 이며 여기에 location 속성이 정의되어 있지 않습니다.
+       그런데, multer-s3를 사용하여 파일을 업로드하면 s3에 업로드 된 후의 URL을 location 속성에 추가시켜 줍니다. 
+       따라서 이 req.file이 위에서 생성한 interface의 FileWithLocation 타입이라고 알려줍니다. (타입캐스팅, 알려주지 않으면 인지하지 못함) */
+      const file = req.file as FileWithLocation;
+      console.log('Uploaded file:', file);
+
+      // 파일이고, URL이 있을 때에만 imageUrl 지정
+      // 클라에서 프로필 사진 업로드하지 않은 경우에는, file을 첨부하지 않음
+      if (file && file.location) {
+        // req.file은 multer로 업로드된 파일 정보를 포함
+        imageUrl = file.location; // S3에 업로드된 파일의 URL
+      }
+
       const updateBuddy = await buddyService.updateBuddy(objectId, {
         name,
         species,
@@ -116,7 +119,7 @@ class BuddyController {
         sex,
         weight,
         isNeutered,
-        buddyImage,
+        buddyImage: imageUrl,
         deletedAt,
       });
 
