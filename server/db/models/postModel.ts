@@ -17,25 +17,16 @@ export class PostModel {
     return posts;
   }
 
-  // // 글 하나 조회
-  // async findById(_id: mongoose.Types.ObjectId) {
-  //   const posts = await Post.find({ _id })
-  //   .populate('userId')
-  //   .populate('communityId')
-  //   .populate('commentId');
-  //   return posts;
-  // } // 글에서 유저에 대한 정보와 어느 카테고리에 속한지를 보여주고 싶을 때?
-
   // 글 하나 조회
   async findById(_id: mongoose.Types.ObjectId) {
     const posts = await Post.find({ _id })
-      .populate('userId') 
+      .populate('userId')
       .populate('communityId')
       .populate({
-        path: 'commentId', 
+        path: 'commentId',
         populate: {
-          path: 'userId', 
-          select: 'nickName', 
+          path: 'userId',
+          select: 'nickName',
         },
       });
     return posts;
@@ -46,7 +37,13 @@ export class PostModel {
     const post = await Post.findOneAndUpdate({ _id }, postData, { new: true })
       .populate('userId')
       .populate('communityId')
-      .populate('commentId');
+      .populate({
+        path: 'commentId',
+        populate: {
+          path: 'userId',
+          select: 'nickName',
+        },
+      });
     return post;
   }
 
