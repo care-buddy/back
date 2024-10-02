@@ -5,7 +5,7 @@ export interface checkBuddy {
   userId?: mongoose.Types.ObjectId;
   hospitalId?: mongoose.Types.ObjectId[];
   name?: string;
-  buddyImage?: string;
+  buddyImage?: string | null;
   species?: Number | null;
   kind?: string | null;
   birth?: String | null;
