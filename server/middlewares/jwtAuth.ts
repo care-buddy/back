@@ -20,9 +20,7 @@ export const getUserToken = async (req: Request, res: Response, next: NextFuncti
     return res.status(401).json({ message: 'refreshToken이 없습니다.' });
   }
 
-  // jwt.verify 함수에서 token 검증할 때 사용하는 secret키가 undefined가 아님을 확인(환경변수 체크)
-const refreshSecret: string | Buffer = process.env.REFRESH_SECRET || '';
-console.log('REFRESH_SECRET:', refreshSecret); // 비밀키 로그 추가
+  const refreshSecret: string | Buffer = process.env.REFRESH_SECRET || '';
   if (!refreshSecret) {
     throw new Error('REFRESH_SECRET is not defined');
   }
@@ -30,27 +28,19 @@ console.log('REFRESH_SECRET:', refreshSecret); // 비밀키 로그 추가
   try {
     // token 검증
     const decoded: any = jwt.verify(refreshToken, refreshSecret);
-    console.log('decoded refreshToken:', decoded); // 디코딩된 토큰 로그 추가
-
-    // 유저 정보 가져오기
     const user = await userService.getUserFromEmailForLogin(decoded.email);
 
     if (!user) {
-      console.log('인증 실패: 유효하지 않은 토큰');
       return res.status(401).json({ success: false, message: '인증 실패: 유효하지 않은 토큰' });
     }
 
-    console.log('토큰 검증 성공:', user);
-
-    // 요청 객체에 user를 추가하여 이후 미들웨어/컨트롤러에서 사용 가능하게 함
-    req.user = user as unknown as checkUser;
-
+    req.user = user;  // 사용자 정보를 요청 객체에 추가
     next();
   } catch (err) {
     console.error('access authenticate 에러:', err);
     return res.status(500).json({ success: false, message: `토큰 검증 미들웨어 에러` });
   }
-}
+};
 
 // 토큰 리프레시
 export const refreshToken = (req: Request, res: Response, next: NextFunction) => {

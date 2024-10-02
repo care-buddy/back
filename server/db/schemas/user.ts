@@ -18,7 +18,7 @@ export interface checkUser {
   buddyId?: mongoose.Types.ObjectId[];
   hospitalId?: mongoose.Types.ObjectId[];
   communityId?: mongoose.Types.ObjectId[];
-  commentId?: mongoose.Types.ObjectId;
+  commentId?: mongoose.Types.ObjectId[];
   deletedAt?: Date;
 }
 
