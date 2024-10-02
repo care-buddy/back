@@ -20,6 +20,7 @@ const setUserToken = (user: any, isOnlyAccess: Number, res: Response) => {
     profileImage: user.profileImage,
     isAdmin: user.adminNumber,
     isTempPassword: user.isTempPassword,
+    userId: user._id,
   };
 
   const accessToken = jwt.sign(accessPayload, accessSecret, option);
@@ -57,6 +58,7 @@ const setUserToken = (user: any, isOnlyAccess: Number, res: Response) => {
   return res.json({
     message: '로그인 성공',
     accessToken,
+    userId: user._id,
   });
 };
 
