@@ -13,7 +13,6 @@ import meRouter from "./meRouter";
 import { getUserToken } from '../middlewares/jwtAuth';
 
 const router = Router();
-//router.use('/api/auth', kakaoRouter);
 router.use('/api/auth', authRouter);
 router.use('/api/users', userRouter);
 router.use('/api/communities', communityRouter);

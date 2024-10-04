@@ -23,8 +23,7 @@ class MeController {
       res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
-
-
+  
   // 추가적으로 업데이트, 삭제, 프로필 사진 등록/삭제 메서드를 구현할 수 있습니다.
   async updateUser(req: Request, res: Response) {
     // 사용자 정보 업데이트 로직을 구현
