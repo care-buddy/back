@@ -22,11 +22,46 @@ class PostController {
       const posts = await postService.confirmAllPosts();
       res.status(200).json({ success: true, data: posts });
     } catch (err: any) {
-      res.status(500).json({ success: false, message: '게시글 조회 중 오류 발생', error: err.message });
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: '게시글 조회 중 오류 발생',
+          error: err.message,
+        });
     }
   }
 
-  // 글 하나 조회 
+  // 커뮤니티별 게시글 조회
+  async confirmCommunityPost(req: Request, res: Response) {
+    try {
+      const { _id } = req.params; // 커뮤니티 ID 받기
+      const objectId = new mongoose.Types.ObjectId(_id); // ObjectId로 변환
+
+      // 커뮤니티 ID에 해당하는 게시글 조회
+      const posts = await postService.confirmCommunityPosts(objectId);
+
+      // 게시글이 없으면 404 에러 반환
+      // if (!posts.length) {
+      //   return res
+      //     .status(404)
+      //     .json({ success: false, message: '게시글이 없습니다.' });
+      // }
+
+      // 게시글 반환
+      res.status(200).json({ success: true, data: posts });
+    } catch (err: any) {
+      res
+        .status(500)
+        .json({
+          success: false,
+          message: '서버 오류가 발생했습니다.',
+          error: err.message,
+        });
+    }
+  }
+
+  // 글 하나 조회
   async confirmPost(req: Request, res: Response) {
     try {
       const { _id } = req.params;
@@ -47,7 +82,13 @@ class PostController {
       const objectId = new mongoose.Types.ObjectId(_id);
 
       const updatePost = await postService.updatePost(objectId, postData);
-      res.status(200).json({ success: true, message: '성공적으로 수정이 완료되었습니다', data: updatePost });
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: '성공적으로 수정이 완료되었습니다',
+          data: updatePost,
+        });
     } catch (err: any) {
       res.status(500).json({ err: err.message });
     }
@@ -92,9 +133,16 @@ class PostController {
       const objectId = new mongoose.Types.ObjectId(_id);
 
       const result = await postService.updatePostImage(objectId, postImage);
-      res.status(200).json({ message: '이미지가 수정되었습니다.', data: result });
+      res
+        .status(200)
+        .json({ message: '이미지가 수정되었습니다.', data: result });
     } catch (err: any) {
-      res.status(500).json({ message: '서버의 postController에서 에러가 났습니다.', error: err.message });
+      res
+        .status(500)
+        .json({
+          message: '서버의 postController에서 에러가 났습니다.',
+          error: err.message,
+        });
     }
   }
 
@@ -106,16 +154,22 @@ class PostController {
       const objectId = new mongoose.Types.ObjectId(_id);
 
       const result = await postService.updatePostImage(objectId, postImage);
-      res.status(200).json({ message: '이미지가 삭제되었습니다.', data: result });
+      res
+        .status(200)
+        .json({ message: '이미지가 삭제되었습니다.', data: result });
     } catch (err: any) {
-      res.status(500).json({ message: '서버의 postController에서 에러가 났습니다.', error: err.message });
+      res
+        .status(500)
+        .json({
+          message: '서버의 postController에서 에러가 났습니다.',
+          error: err.message,
+        });
     }
   }
 }
 
 const postController = new PostController();
 export default postController;
-
 
 // import postService from '../services/postServices';
 // import { Request, Response } from 'express';

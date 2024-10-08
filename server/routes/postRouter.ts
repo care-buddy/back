@@ -7,6 +7,7 @@ import { getUserToken } from '../middlewares/jwtAuth';
 const postRouter = Router();
 postRouter.post('/', getUserToken, postController.createPost); // 글 생성
 postRouter.get('/', postController.confirmAllPost); // 전체 게시글 조회
+postRouter.get('/community/:_id', postController.confirmCommunityPost); // 커뮤니티별 게시글 조회
 postRouter.get('/:_id', getUserToken, postController.confirmPost); // 글 하나 조회
 postRouter.put('/:_id', getUserToken, postController.updatePost); // 수정
 postRouter.put('/:_id/d', getUserToken, postController.deletePost); // 삭제
