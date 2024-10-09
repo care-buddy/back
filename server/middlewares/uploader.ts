@@ -10,6 +10,7 @@ const uploader = multer({
     bucket: process.env.AWS_S3_BUCKET_NAME!,
     acl: 'public-read',
     contentType: multerS3.AUTO_CONTENT_TYPE,
+    contentDisposition: 'inline', // 다운로드 대신 브라우저에서 열리도록 설정
     key: function (req, file, cb) {
       // uuid로 고유 id를 생성했는데 기존 업로더에서는 Date()로 고유성을 주신 것 같아서, 원하시는 방향으로 사용해주세요!
       cb(null, `${uuidv4()}-${file.originalname}`);

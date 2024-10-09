@@ -11,50 +11,60 @@ export interface checkPost {
   deletedAt?: Date | null;
   isLiked: boolean;
   likeCount: number;
-  postImage?: string[]
+  postImage?: string | null;
 }
 
 const PostSchema = new Schema(
   {
-    userId: {   //user 스키마를 참조해 userId 가져옴
+    userId: {
+      //user 스키마를 참조해 userId 가져옴
       type: Schema.Types.ObjectId,
-      ref: "users",
-      required: true
+      ref: 'users',
+      required: true,
     },
-    communityId: {   //community 스키마를 참조해 categoryId 가져옴
+    communityId: {
+      //community 스키마를 참조해 categoryId 가져옴
       type: Schema.Types.ObjectId,
-      ref: "communities",
-      required: true
+      ref: 'communities',
+      required: true,
     },
-    commentId: [{   //comment 스키마를 참조해 commentId 가져옴
-      type: Schema.Types.ObjectId,
-      ref: "comments"
-    }],
-    title: {     // 글제목
+    commentId: [
+      {
+        //comment 스키마를 참조해 commentId 가져옴
+        type: Schema.Types.ObjectId,
+        ref: 'comments',
+      },
+    ],
+    title: {
+      // 글제목
       type: String,
-      required: true
+      required: true,
     },
-    likedUsers: [{ 
-      type: Schema.Types.ObjectId, 
-      ref: 'users' 
-    }],
-    content: {    // 글 내용
+    likedUsers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'users',
+      },
+    ],
+    content: {
+      // 글 내용
       type: String,
-      required: true
+      required: true,
     },
-    deletedAt: {  // 나중에 삭제되는 시간 저장
+    deletedAt: {
+      // 나중에 삭제되는 시간 저장
       type: Date,
-      default: null
+      default: null,
     },
-    postImage:{
-      type: [String],
-      default: null
-    }
+    postImage: {
+      type: String,
+      default: null, // null 값 저장 시, 클라에서 기본 이미지로 렌더링 해줍니다.
+    },
   },
   {
     versionKey: false, // 버전 키를 사용하지 않음
     timestamps: true, // 등록 및 업데이트 시간 자동 생성
-    collection: "posts"
+    collection: 'posts',
   },
 );
 
