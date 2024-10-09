@@ -2,14 +2,35 @@ import postService from '../services/postServices';
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
 
+interface FileWithLocation extends Express.Multer.File {
+  location?: string; // multer-s3에서 제공하는 URL
+}
 class PostController {
   // 글 생성
   async createPost(req: Request, res: Response) {
     try {
       const userId = req.user?._id; // 인증된 사용자 정보 활용
-      const datas = req.body;
+      const { ...datas } = req.body;
 
-      const post = await postService.createPost({ userId, ...datas });
+      // 이미지 업로드 처리
+      let imageUrl: string | null = null;
+      /* Multer 사용하여 파일 업로드 시, req.file의 타입은 Express.Multer.File 이며 여기에 location 속성이 정의되어 있지 않습니다.
+       그런데, multer-s3를 사용하여 파일을 업로드하면 s3에 업로드 된 후의 URL을 location 속성에 추가시켜 줍니다. 
+       따라서 이 req.file이 위에서 생성한 interface의 FileWithLocation 타입이라고 알려줍니다. (타입캐스팅, 알려주지 않으면 인지하지 못함) */
+      const file = req.file as FileWithLocation;
+
+      // 파일이고, URL이 있을 때에만 imageUrl 지정
+      // 클라에서 프로필 사진 업로드하지 않은 경우에는, file을 첨부하지 않음
+      if (file && file.location) {
+        // req.file은 multer로 업로드된 파일 정보를 포함
+        imageUrl = file.location; // S3에 업로드된 파일의 URL
+      }
+
+      const post = await postService.createPost({
+        ...datas,
+        userId,
+        postImage: imageUrl,
+      });
       res.status(201).json({ success: true, data: post._id });
     } catch (err: any) {
       res.status(500).json({ err: err.message });

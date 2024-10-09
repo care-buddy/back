@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
-    
+
     "target": "es2016",
     "module": "commonjs",
     "outDir": "./dist",
@@ -11,11 +11,13 @@
     "strict": true,
     "skipLibCheck": true,
     "typeRoots": [
-      "./types", 
-      "./node_modules/@types"
+      "./types",
+      "./node_modules/@types",
+      "./src/types",
+      "./global.d.ts"
     ]
   },
   "include": ["**/*.ts", "types/**/*.d.ts"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
   //"files": ["types/passport.d.ts"]
 }

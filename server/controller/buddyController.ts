@@ -31,7 +31,7 @@ class BuddyController {
 
       const buddy = await buddyService.createBuddy({
         ...datas,
-        birth: birthDate,
+        userId,
         buddyImage: imageUrl, // S3 URL
       });
 
@@ -81,15 +81,16 @@ class BuddyController {
   async updateBuddy(req: Request, res: Response) {
     try {
       // req의 params과 body에서 데이터 가져옴
-      const { _id } = req.params;
+      const { _id } = req.params; // buddyId
       const {
-        buddyImage,
+        name,
         species,
         kind,
         birth,
         sex,
         weight,
         isNeutered,
+        buddyImage,
         deletedAt,
       } = req.body;
 
@@ -111,7 +112,7 @@ class BuddyController {
       }
 
       const updateBuddy = await buddyService.updateBuddy(objectId, {
-        buddyImage,
+        name,
         species,
         kind,
         birth,
@@ -179,5 +180,6 @@ class BuddyController {
     }
   }
 }
+
 const buddyController = new BuddyController();
 export default buddyController;

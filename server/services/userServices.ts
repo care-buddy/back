@@ -126,7 +126,7 @@ class UserService {
     return user;
   }
 
-  // 그룹 탈퇴  
+  // 그룹 탈퇴
   async withdrawalCommunity(_id: mongoose.Types.ObjectId, communityId: mongoose.Types.ObjectId) {
     const user = await this.userModel.findByUserId(_id);
     const community = await this.communityModel.findByCommunityId(communityId);
