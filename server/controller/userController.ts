@@ -7,57 +7,60 @@ import sendMail from '../utils/sendMail';
 import { setAuthCodeToken } from '../utils/jwt';
 
 class UserController {
-  // 마이페이지
+  // 마이페이지 조회 (로그인한 유저 정보 조회)
   async getMyPage(req: Request, res: Response, next: NextFunction) {
     try {
-      console.log('getMyPage 호출됨');
-      //req.params._id로 유저 조회
-
-      // req의 params에서 데이터 가져옴
-      const { _id } = req.params;
-      console.log('req.params._id:', _id);
-      /* 
-            const { email } = req.body;
-            console.log('req.params.email:', email);
-       */
-      const objectId = new mongoose.Types.ObjectId(_id);
-
-      const user = await userService.getMyPage(objectId);
-      //const user = await userService.getUserFromEmail(email);
-
+      const user = req.user; // JWT 미들웨어를 통해 추가된 사용자 정보
       if (!user) {
-        return res.status(404).json({ success: false, message: '사용자를 찾을 수 없습니다.' });
+        return res.status(401).json({ message: "사용자 인증이 필요합니다." });
       }
 
-      //일반 정보 조회
-      console.log(`** ${objectId}의 정보를 조회합니다.`, user)
-
+      console.log(`** ${user._id}의 정보를 조회합니다.`, user);
       res.status(200).json({ success: true, message: user });
     } catch (error) {
       console.error('getMyPage 에러:', error);
-      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.', err: error });
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
 
   // 회원정보 수정
   async updateUser(req: Request, res: Response) {
-    const { _id } = req.params;
-    const userData = req.body;
-    const objectId = new mongoose.Types.ObjectId(_id);
+    try {
+      const user = req.user;
+      const userData = req.body;
 
-    const updateUser = await userService.updateUser(objectId, userData);
+      if (!user) {
+        return res.status(401).json({ message: "사용자 인증이 필요합니다." });
+      }
 
-    res.status(200).json({ success: true, data: updateUser });
+      const objectId = new mongoose.Types.ObjectId(user._id);
+      const updatedUser = await userService.updateUser(objectId, userData);
+
+      res.status(200).json({ success: true, data: updatedUser });
+    } catch (error) {
+      console.error('updateUser 에러:', error);
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+    }
   }
 
   // 회원 탈퇴
   async deleteUser(req: Request, res: Response) {
-    const { _id } = req.params;
-    const objectId = new mongoose.Types.ObjectId(_id);
-    const deleteUser = await userService.deleteUser(objectId);
-    res.status(200).json({ success: true, data: deleteUser });
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({ message: "사용자 인증이 필요합니다." });
+      }
+
+      const objectId = new mongoose.Types.ObjectId(user._id);
+      const deletedUser = await userService.deleteUser(objectId);
+
+      res.status(200).json({ success: true, data: deletedUser });
+    } catch (error) {
+      console.error('deleteUser 에러:', error);
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+    }
   }
-  
+
   // 프로필 사진 등록
   async putProfileImage(req: Request, res: Response) {
     try {
@@ -70,7 +73,7 @@ class UserController {
       res.status(500).json({ message: "서버의 userContrller에서 에러가 났습니다." });
     }
   }
- 
+
   // 프로필 사진 삭제
   async deleteProfileImage(req: Request, res: Response) {
     try {
@@ -95,15 +98,15 @@ class UserController {
     res.status(200).json({ success: true, data: user });
   }
 
-   
+
   //그룹 탈퇴
   async withdrawalCommunity(req: Request, res: Response) {
-      const { _id } = req.params;
-      const { communityId } = req.body;
-      const objectId = new mongoose.Types.ObjectId(_id);
+    const { _id } = req.params;
+    const { communityId } = req.body;
+    const objectId = new mongoose.Types.ObjectId(_id);
 
-      const user = await userService.withdrawalCommunity(objectId, communityId);
-      res.status(200).json({ success: true, data: user });
+    const user = await userService.withdrawalCommunity(objectId, communityId);
+    res.status(200).json({ success: true, data: user });
   }
 
 }
