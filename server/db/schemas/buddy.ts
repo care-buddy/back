@@ -11,7 +11,7 @@ export interface checkBuddy {
   birth?: String | null;
   sex?: number | null;
   weight?: number | null;
-  isNeutered?: Date | null;
+  isNeutered?: Number | null;
   deletedAt?: Date | null;
 }
 
@@ -52,7 +52,7 @@ const BuddySchema = new Schema(
     },
     birth: {
       // 생년월일
-      type: Date,
+      type: String,
       default: null,
     },
     sex: {
@@ -67,7 +67,7 @@ const BuddySchema = new Schema(
     },
     isNeutered: {
       // 중성화 여부
-      type: Date,
+      type: Number,
       default: null,
     },
     deletedAt: {
