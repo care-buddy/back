@@ -2,6 +2,9 @@ import mongoose from 'mongoose';
 import { User, checkUser } from '../schemas/user';
 
 export class UserModel {
+  static findByUserId(_id: mongoose.Types.ObjectId | undefined) {
+    throw new Error('Method not implemented.');
+  }
   // 유저 정보 등록 (로그인 시 최초 저장)
   async join(userData: { nickName: string; email: string; password: string }) {
     const user = await User.create(userData);
@@ -11,6 +14,7 @@ export class UserModel {
   // userId로 사용자 조회
   async findByUserId(_id: mongoose.Types.ObjectId) {
     // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
+    // const user = await User.findById( _id )
     const user = await User.findById({ _id })
       .populate('buddyId')
       .populate('postId')

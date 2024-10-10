@@ -8,7 +8,7 @@ export interface checkBuddy {
   buddyImage?: string | null;
   species?: Number | null;
   kind?: string | null;
-  birth?: String | null;
+  birth?: string | null;
   sex?: number | null;
   weight?: number | null;
   isNeutered?: Date | null;
@@ -52,7 +52,7 @@ const BuddySchema = new Schema(
     },
     birth: {
       // 생년월일
-      type: Date,
+      type: String,
       default: null,
     },
     sex: {
