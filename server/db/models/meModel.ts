@@ -27,7 +27,7 @@ export class MeModel {
     const user = await User.findById(_id)
       .populate({
         path: 'buddyId',
-        select: 'name kind birth',
+        select: 'name kind birth buddyImage',
       })
       .populate({
         path: 'postId',
