@@ -8,7 +8,7 @@ export interface checkBuddy {
   buddyImage?: string | null;
   species?: Number | null;
   kind?: string | null;
-  birth?: String | null;
+  birth?: string | null;
   sex?: number | null;
   weight?: number | null;
   isNeutered?: Number | null;

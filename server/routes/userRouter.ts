@@ -9,7 +9,6 @@ const userRouter = Router();
 // 삭제는 put 으로
 // 회원 정보 조회
 userRouter.get('/:_id', userController.getMyPage);
-//userRouter.get('/mypage', getUserToken, userController.getMyPage);
 // 회원 정보 수정
 userRouter.put('/:_id', userController.updateUser);
 // 회원 정보 삭제
