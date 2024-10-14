@@ -15,7 +15,12 @@ postRouter.post(
 postRouter.get('/', postController.confirmAllPost); // 전체 게시글 조회
 postRouter.get('/:_id/community', postController.confirmCommunityPost); // 커뮤니티별 게시글 조회
 postRouter.get('/:_id', getUserToken, postController.confirmPost); // 글 하나 조회
-postRouter.put('/:_id', getUserToken, postController.updatePost); // 수정
+postRouter.put(
+  '/:_id',
+  getUserToken,
+  uploader.single('postImage'),
+  postController.updatePost,
+); // 수정
 postRouter.put('/:_id/d', getUserToken, postController.deletePost); // 삭제
 postRouter.put('/:_id/like', getUserToken, postController.likeHandle); // 좋아요
 
