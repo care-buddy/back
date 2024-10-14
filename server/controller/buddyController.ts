@@ -102,7 +102,6 @@ class BuddyController {
        그런데, multer-s3를 사용하여 파일을 업로드하면 s3에 업로드 된 후의 URL을 location 속성에 추가시켜 줍니다. 
        따라서 이 req.file이 위에서 생성한 interface의 FileWithLocation 타입이라고 알려줍니다. (타입캐스팅, 알려주지 않으면 인지하지 못함) */
       const file = req.file as FileWithLocation;
-      console.log('Uploaded file:', file);
 
       // 파일이고, URL이 있을 때에만 imageUrl 지정
       // 클라에서 프로필 사진 업로드하지 않은 경우에는, file을 첨부하지 않음
