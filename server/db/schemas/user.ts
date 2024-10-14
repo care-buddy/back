@@ -70,6 +70,12 @@ const UserSchema = new Schema(
         ref: 'posts',
       },
     ],
+    categoryId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'category',
+      },
+    ],
     commentId: [
       {
         //comment 스키마를 참조해 commentId 가져옴

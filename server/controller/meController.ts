@@ -30,8 +30,8 @@ class MeController {
           email: user.email,
           profileImage: user.profileImage,
           introduce: user.introduce,
-          posts: user.postId || [],
-          buddies: user.buddyId || [], // buddyId 데이터 포함
+          postId: user.postId || [],
+          buddyId: user.buddyId || [],
         },
       });
     } catch (error) {
