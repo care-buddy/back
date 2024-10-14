@@ -26,7 +26,7 @@ class PostController {
     }
   }
 
-  // 글 하나 조회 
+  // 글 하나 조회
   async confirmPost(req: Request, res: Response) {
     try {
       const { _id } = req.params;
