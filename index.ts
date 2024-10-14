@@ -42,7 +42,7 @@ mongoose.connection.on('connected', () => {
   console.log('Successfully connected to MongoDB');
 });
 
-app.set('view engine', 'html');     //  HTML 파일을 사용할 것이므로 view engine 속성을 "html"로 설정
+app.set('view engine', 'html'); //  HTML 파일을 사용할 것이므로 view engine 속성을 "html"로 설정
 
 // 템플릿 파일이 위치한 디렉터리를 지정
 // express 속성에 Express 애플리케이션 객체를 전달하여 Nunjucks가 Express와 함께 작동
@@ -53,7 +53,7 @@ app.use(router);
 app.use(errorHandler);
 
 app.get('/', (req: Request, res: Response) => {
-  res.sendFile(__dirname + "HTML파일");
+  res.sendFile(__dirname + 'HTML파일');
 });
 
 app.listen(PORT, () => {

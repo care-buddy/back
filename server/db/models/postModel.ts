@@ -8,6 +8,16 @@ export class PostModel {
     return newPost;
   }
 
+
+  // 조건에 맞는 게시글 조회(커뮤니티별 게시글 조회용)
+  async findPosts(query: object) {
+    const posts = await Post.find(query)
+      .populate('userId')
+      .populate('communityId')
+      .populate('commentId');
+    return posts;
+  }
+
   // 전체 글 조회
   async findAllPosts() {
     const posts = await Post.find({})

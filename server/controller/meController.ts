@@ -36,7 +36,9 @@ class MeController {
       });
     } catch (error) {
       console.error('me API 에러:', error);
-      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
+      res
+        .status(500)
+        .json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
 
