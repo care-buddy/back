@@ -21,7 +21,7 @@ router.use('/api/posts', postRouter);
 router.use('/api/hospitals', getUserToken, hospitalRouter);
 router.use('/api/comments', commentRouter);
 router.use('/api/searches', searchRouter);
-router.use("/api/me", meRouter);
+router.use("/api/me", getUserToken, meRouter);
 //router.use('/api/me', unAuth, userController.confirmUserMe); //추가
 
 

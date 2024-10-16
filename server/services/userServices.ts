@@ -145,7 +145,7 @@ class UserService {
 
     return user;
   }
-  
+
   // 프로필 사진 등록 및 삭제
   async updateProfileImage(email: string, profileImage?: string) {
     console.log(`${email}의 프로필을 수정합니다. [Service]`);
