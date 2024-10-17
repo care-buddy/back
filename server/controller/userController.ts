@@ -6,19 +6,19 @@ class UserController {
   // 마이페이지 조회 (로그인한 유저 정보 조회)
   async getMyPage(req: Request, res: Response) {
     try {
-      const { id } = req.params; // 사용자 ID를 URL 파라미터로 받음
-      const user = await userService.getMyPage(new mongoose.Types.ObjectId(id)); // ID로 사용자 정보 조회
+      const { _id } = req.params; // 사용자 ID를 URL 파라미터로 받음
+      const user = await userService.getMyPage(new mongoose.Types.ObjectId(_id)); // ID로 사용자 정보 조회
+      console.log('찾은 사용자:', user); // 확인용 로그 추가
 
       if (!user) {
-        res.json({ message: "사용자를 찾을 수 없습니다." });
-        return;
+        return res.status(404).json({ success: false, message: "사용자를 찾을 수 없습니다." });
       }
 
       console.log(`** ${user._id}의 정보를 조회합니다.`, user);
-      res.json({ success: true, message: user });
+      res.status(200).json({ success: true, message: user });
     } catch (error) {
       console.error('getMyPage 에러:', error);
-      res.json({ success: false, message: '서버 오류가 발생했습니다.' });
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
 
@@ -31,14 +31,13 @@ class UserController {
       const updatedUser = await userService.updateUser(new mongoose.Types.ObjectId(userData._id), userData);
 
       if (!updatedUser) {
-        res.json({ message: "사용자 정보를 업데이트하는 데 실패했습니다." });
-        return;
+        return res.status(404).json({ success: false, message: "사용자 정보를 업데이트하는 데 실패했습니다." });
       }
 
-      res.json({ success: true, data: updatedUser });
+      res.status(200).json({ success: true, data: updatedUser });
     } catch (error) {
       console.error('updateUser 에러:', error);
-      res.json({ success: false, message: '서버 오류가 발생했습니다.' });
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
 
@@ -49,14 +48,13 @@ class UserController {
       const deletedUser = await userService.deleteUser(new mongoose.Types.ObjectId(id));
 
       if (!deletedUser) {
-        res.json({ message: "사용자 정보를 삭제하는 데 실패했습니다." });
-        return;
+        return res.status(404).json({ success: false, message: "사용자 정보를 삭제하는 데 실패했습니다." });
       }
 
-      res.json({ success: true, data: deletedUser });
+      res.status(200).json({ success: true, message: '사용자 계정이 삭제되었습니다.', data: deletedUser });
     } catch (error) {
       console.error('deleteUser 에러:', error);
-      res.json({ success: false, message: '서버 오류가 발생했습니다.' });
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
 
@@ -65,11 +63,17 @@ class UserController {
     try {
       const { id } = req.params; // 사용자 ID를 URL 파라미터로 받음
       const profileImage = req.file?.filename;
+
+      if (!profileImage) {
+        return res.status(400).json({ success: false, message: '프로필 이미지가 필요합니다.' });
+      }
+
       const result = await userService.updateProfileImage(id, profileImage); // ID로 프로필 이미지 업데이트
-      res.json({ message: "이미지가 수정되었습니다.", data: result });
-    } catch (err) {
-      console.log(err);
-      res.json({ message: "서버의 userController에서 에러가 났습니다." });
+
+      res.status(200).json({ success: true, message: "이미지가 수정되었습니다.", data: result });
+    } catch (error) {
+      console.error('putProfileImage 에러:', error);
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
 
@@ -77,12 +81,13 @@ class UserController {
   async deleteProfileImage(req: Request, res: Response) {
     try {
       const { id } = req.params; // 사용자 ID를 URL 파라미터로 받음
-      const profileImage = `public/image/defaultprofileImage.png`;
+      const profileImage = 'public/image/defaultprofileImage.png';
       const result = await userService.updateProfileImage(id, profileImage); // ID로 프로필 이미지 삭제
-      res.json({ message: "이미지가 삭제되었습니다.", data: result });
+
+      res.status(200).json({ success: true, message: "이미지가 삭제되었습니다.", data: result });
     } catch (error) {
-      console.log(error);
-      res.json({ message: "서버의 userController에서 에러가 났습니다." });
+      console.error('deleteProfileImage 에러:', error);
+      res.status(500).json({ success: false, message: '서버 오류가 발생했습니다.' });
     }
   }
 
@@ -92,7 +97,7 @@ class UserController {
     const { communityId } = req.body;
 
     const user = await userService.joinCommunity(new mongoose.Types.ObjectId(id), communityId);
-    res.json({ success: true, data: user });
+    res.status(200).json({ success: true, data: user });
   }
 
   // 그룹 탈퇴
@@ -101,7 +106,7 @@ class UserController {
     const { communityId } = req.body;
 
     const user = await userService.withdrawalCommunity(new mongoose.Types.ObjectId(id), communityId);
-    res.json({ success: true, data: user });
+    res.status(200).json({ success: true, data: user });
   }
 }
 
