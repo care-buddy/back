@@ -35,6 +35,16 @@ class PostService {
     return posts;
   }
 
+  // 커뮤니티별 게시글 조회
+  async confirmCommunityPosts(communityId: mongoose.Types.ObjectId) {
+    const posts = await this.postModel.findPosts({ communityId }); // communityId로 게시글 조회
+
+    if (!posts || posts.length === 0) {
+      return { status: 404, err: '해당 커뮤니티에 게시물이 없습니다.' };
+    }
+    return posts;
+  }
+
   // 글 하나 조회
   async confirmUserPosts(_id: mongoose.Types.ObjectId) {
     const posts = await this.postModel.findById(_id);

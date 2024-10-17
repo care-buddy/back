@@ -8,10 +8,10 @@ export interface checkBuddy {
   buddyImage?: string | null;
   species?: Number | null;
   kind?: string | null;
-  birth?: String | null;
+  birth?: string | null;
   sex?: number | null;
   weight?: number | null;
-  isNeutered?: Date | null;
+  isNeutered?: Number | null;
   deletedAt?: Date | null;
 }
 
@@ -67,8 +67,8 @@ const BuddySchema = new Schema(
     },
     isNeutered: {
       // 중성화 여부
-      type: Boolean,
-      default: false, // false: 중성화 X, true: 중성화 O
+      type: Number,
+      default: null,
     },
     deletedAt: {
       // 유저 화면에 보여주나 실제로 삭제되면 안됨

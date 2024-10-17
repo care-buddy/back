@@ -34,9 +34,6 @@ export const getUserToken = async (
   try {
     // token 검증
     const decoded: any = jwt.verify(refreshToken, refreshSecret);
-    console.log('decoded refreshToken:', decoded); // 디코딩된 토큰 로그 추가
-
-    // 유저 정보 가져오기
     const user = await userService.getUserFromEmailForLogin(decoded.email);
 
     if (!user) {
@@ -46,11 +43,7 @@ export const getUserToken = async (
         .json({ success: false, message: '인증 실패: 유효하지 않은 토큰' });
     }
 
-    console.log('토큰 검증 성공:', user);
-
-    // 요청 객체에 user를 추가하여 이후 미들웨어/컨트롤러에서 사용 가능하게 함
-    req.user = user as unknown as checkUser;
-
+    req.user = user;  // 사용자 정보를 요청 객체에 추가
     next();
   } catch (err) {
     console.error('access authenticate 에러:', err);

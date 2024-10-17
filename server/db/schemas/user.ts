@@ -15,10 +15,11 @@ export interface checkUser {
   adminNumber?: number;
   refreshToken?: string | null;
   isTempPassword?: Number;
+  postId?: mongoose.Types.ObjectId[];
   buddyId?: mongoose.Types.ObjectId[];
   hospitalId?: mongoose.Types.ObjectId[];
   communityId?: mongoose.Types.ObjectId[];
-  commentId?: mongoose.Types.ObjectId;
+  commentId?: mongoose.Types.ObjectId[];
   deletedAt?: Date;
 }
 
@@ -67,6 +68,12 @@ const UserSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'posts',
+      },
+    ],
+    categoryId: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'category',
       },
     ],
     commentId: [

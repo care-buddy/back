@@ -3,9 +3,9 @@ import { IncomingMessage } from "http";
 declare global {
     namespace Express {
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface AuthInfo {}
+        interface AuthInfo { }
         // eslint-disable-next-line @typescript-eslint/no-empty-interface
-        interface User {}
+        interface User { }
 
         interface Request {
             authInfo?: AuthInfo | undefined;
@@ -764,23 +764,23 @@ declare namespace passport {
         displayName: string;
         username?: string | undefined;
         name?:
-            | {
-                familyName: string;
-                givenName: string;
-                middleName?: string | undefined;
-            }
-            | undefined;
+        | {
+            familyName: string;
+            givenName: string;
+            middleName?: string | undefined;
+        }
+        | undefined;
         emails?:
-            | Array<{
-                value: string;
-                type?: string | undefined;
-            }>
-            | undefined;
+        | Array<{
+            value: string;
+            type?: string | undefined;
+        }>
+        | undefined;
         photos?:
-            | Array<{
-                value: string;
-            }>
-            | undefined;
+        | Array<{
+            value: string;
+        }>
+        | undefined;
     }
 
     interface Framework<InitializeRet = any, AuthenticateRet = any, AuthorizeRet = AuthenticateRet> {
