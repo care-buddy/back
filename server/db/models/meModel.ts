@@ -17,8 +17,8 @@ export class MeModel {
         path: 'postId',
         select: 'commentId communityId content title createdAt updatedAt deletedAt',
         populate: {
-          path: 'communityId', // communityId를 추가로 populate
-          select: 'community',  // community 필드만 선택
+          path: 'communityId', 
+          select: 'community category',  
         },
       })
       .populate({
