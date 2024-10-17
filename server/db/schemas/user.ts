@@ -10,7 +10,7 @@ export interface checkUser {
   nickName?: string;
   email?: string;
   password?: string;
-  profileImage?: string[];
+  profileImage?: string | null;
   introduce?: string;
   adminNumber?: number;
   refreshToken?: string | null;
@@ -42,8 +42,8 @@ const UserSchema = new Schema(
     },
     profileImage: {
       // 프로필 사진
-      type: [String],
-      default: 'public/defaultprofileImage.png',
+      type: String,
+      default: null,
     },
     introduce: {
       // 소개글
