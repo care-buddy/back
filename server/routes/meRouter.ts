@@ -8,10 +8,10 @@ const meRouter = Router();
 meRouter.get('/', getUserToken, meController.getMe); // meController의 getMe 메서드 사용
 
 // 현재 로그인한 사용자 정보 업데이트
-meRouter.put('/', getUserToken, meController.updateMe); // 추가된 메서드
+meRouter.put('/', getUserToken, meController.updateUser); // 추가된 메서드
 
 // 현재 로그인한 사용자 계정 삭제
-meRouter.delete('/', getUserToken, meController.deleteMe); // 추가된 메서드
+meRouter.delete('/', getUserToken, meController.deleteUser); // 추가된 메서드
 
 // 프로필 사진 등록
 meRouter.post("/profileImage", getUserToken, meController.putProfileImage); // 추가된 메서드
