@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import userService from '../services/userServices';
 import meService from '../services/meServices';
 import mongoose from 'mongoose';
-
+interface FileWithLocation extends Express.Multer.File {
+  location?: string; // multer-s3에서 제공하는 URL
+}
 // 사용자의 정보를 반환하는 meController
 class MeController {
   // 현재 로그인한 사용자 정보를 반환하는 메서드
@@ -51,9 +53,32 @@ class MeController {
           .status(401)
           .json({ success: false, message: '사용자 인증이 필요합니다.' });
       }
+
+      // 이미지 업로드 처리
+      let imageUrl: string | null = null;
+      /* Multer 사용하여 파일 업로드 시, req.file의 타입은 Express.Multer.File 이며 여기에 location 속성이 정의되어 있지 않습니다.
+           그런데, multer-s3를 사용하여 파일을 업로드하면 s3에 업로드 된 후의 URL을 location 속성에 추가시켜 줍니다. 
+           따라서 이 req.file이 위에서 생성한 interface의 FileWithLocation 타입이라고 알려줍니다. (타입캐스팅, 알려주지 않으면 인지하지 못함) */
+      const file = req.file as FileWithLocation;
+
+      // 기존 이미지가 있는지 확인
+      const userInformation = await meService.getUserInformation(userId);
+      const profileImage = userInformation?.profileImage;
+
+      // 파일이고, URL이 있을 때에만 imageUrl 지정
+      // 클라에서 프로필 사진 업로드하지 않은 경우에는, file을 첨부하지 않음
+      if (file && file.location) {
+        // req.file은 multer로 업로드된 파일 정보를 포함
+        imageUrl = file.location; // S3에 업로드된 파일의 URL
+      } else if (profileImage) {
+        // 파일이 없다면 즉, 프로필 이미지가 전송되지 않았다면 기존 이미지를 유지
+        // 프론트에서는 url로 이미지를 관리하기 때문에, 이미지 수정이 없을 때 로직을 서버에서 처리해줌
+        imageUrl = profileImage;
+      }
+
       const updatedUser = await userService.updateUser(
         new mongoose.Types.ObjectId(userId),
-        userData,
+        { ...userData, profileImage: imageUrl },
       );
       if (!updatedUser) {
         return res.status(404).json({
@@ -149,20 +174,16 @@ class MeController {
         defaultImage,
       ); // 기본 프로필 이미지로 업데이트
       if (!updatedUser) {
-        return res
-          .status(404)
-          .json({
-            success: false,
-            message: '프로필 사진 삭제에 실패했습니다.',
-          });
-      }
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: '이미지가 삭제되었습니다.',
-          data: updatedUser,
+        return res.status(404).json({
+          success: false,
+          message: '프로필 사진 삭제에 실패했습니다.',
         });
+      }
+      res.status(200).json({
+        success: true,
+        message: '이미지가 삭제되었습니다.',
+        data: updatedUser,
+      });
     } catch (error) {
       console.error('deleteProfileImage 에러:', error);
       res
