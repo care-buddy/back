@@ -26,7 +26,6 @@ class UserService {
   // 회원 정보 조회 (마이페이지)
   async getMyPage(_id: mongoose.Types.ObjectId) {
     const user = await this.userModel.findByUserId(_id);
-
     console.log(user);
 
     return user;

@@ -13,13 +13,25 @@ export class UserModel {
 
   // userId로 사용자 조회
   async findByUserId(_id: mongoose.Types.ObjectId) {
-    // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
-    // const user = await User.findById( _id )
     const user = await User.findById({ _id })
-      .populate('buddyId')
-      .populate('postId')
-      .populate('communityId')
-      .populate('commentId');
+      .populate({
+        path: 'buddyId',
+        select: 'name kind birth buddyImage',
+      })
+      .populate({
+        path: 'postId',
+        select: 'commentId communityId content title createdAt updatedAt deletedAt',
+        populate: {
+          path: 'communityId',
+          select: 'community category',
+        },
+      })
+      .populate({
+        path: 'communityId',
+        select: 'community category',
+      })
+      .select('-commentId')
+      .exec();
 
     return user;
   }
