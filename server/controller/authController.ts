@@ -131,10 +131,10 @@ class AuthController {
     const user = await userService.getUserFromEmail(email);
     if (user) {
       res
-        .status(404)
+        .status(409)
         .json({ message: '해당 아이디로 가입된 사용자가 있습니다' });
     } else {
-      res.send({
+      res.status(201).json({
         message: '해당 아이디로 가입이 가능합니다',
       });
     }
@@ -189,7 +189,7 @@ class AuthController {
     // 인증번호 일치 여부 확인
     if (code === authCode) {
       delete authCodeCache[email]; // 인증 완료 후 삭제
-      res.send({
+      res.status(200).json({
         message: '인증번호가 확인되었습니다.',
       });
     } else {
