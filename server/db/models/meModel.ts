@@ -11,14 +11,15 @@ export class MeModel {
     const user = await User.findById(_id)
       .populate({
         path: 'buddyId',
-        select: 'name kind birth buddyImage',
+        select: 'name kind birth buddyImage deletedAt',
       })
       .populate({
         path: 'postId',
-        select: 'commentId communityId content title createdAt updatedAt deletedAt',
+        select:
+          'commentId communityId content title createdAt updatedAt deletedAt',
         populate: {
-          path: 'communityId', 
-          select: 'community category',  
+          path: 'communityId',
+          select: 'community category',
         },
       })
       .populate({
