@@ -93,19 +93,19 @@ class UserController {
 
   // 그룹 가입
   async joinCommunity(req: Request, res: Response) {
-    const { id } = req.params; // 사용자 ID를 URL 파라미터로 받음
+    const { _id } = req.params; // 사용자 ID를 URL 파라미터로 받음
     const { communityId } = req.body;
 
-    const user = await userService.joinCommunity(new mongoose.Types.ObjectId(id), communityId);
+    const user = await userService.joinCommunity(new mongoose.Types.ObjectId(_id), communityId);
     res.status(200).json({ success: true, data: user });
   }
 
   // 그룹 탈퇴
   async withdrawalCommunity(req: Request, res: Response) {
-    const { id } = req.params; // 사용자 ID를 URL 파라미터로 받음
+    const { _id } = req.params; // 사용자 ID를 URL 파라미터로 받음
     const { communityId } = req.body;
 
-    const user = await userService.withdrawalCommunity(new mongoose.Types.ObjectId(id), communityId);
+    const user = await userService.withdrawalCommunity(new mongoose.Types.ObjectId(_id), communityId);
     res.status(200).json({ success: true, data: user });
   }
 }
