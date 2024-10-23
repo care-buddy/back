@@ -11,10 +11,10 @@ import REFRESH_TOKEN_ROTATION_PERIOD from '../constants/authContants';
 class AuthController {
   // 회원가입
   async signUp(req: Request, res: Response) {
-    const { nickName, email, password } = req.body;
+    const { nickName, email, password, mobileNumber } = req.body;
 
     // 입력 데이터 검증
-    if (!nickName || !email || !password) {
+    if (!nickName || !email || !password || !mobileNumber) {
       return res
         .status(400)
         .json({ success: false, message: '필수 입력 값입니다' });
@@ -27,6 +27,7 @@ class AuthController {
       nickName,
       email,
       password: hashedPassword,
+      mobileNumber,
     });
 
     res.status(201).json({ success: true, data: newUser });
@@ -197,6 +198,20 @@ class AuthController {
         message: '잘못된 인증번호입니다.',
       });
     }
+  }
+
+  // 아이디 찾기 
+  async findingId(req: Request, res: Response) {
+    const { mobileNumber } = req.body;
+    const email = await userService.getEmailFromMobileNumber(mobileNumber);
+
+    // 이메일 골뱅이 앞 두자리 **로 처리
+
+
+    res
+    .status(200)
+    .json({message: '아이디 조회', email })
+
   }
 
   // 토큰 발급

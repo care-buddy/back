@@ -13,10 +13,16 @@ class UserService {
   }
 
   // 회원가입
-  async createUser(userData: { nickName: string; email: string; password: string }) {
+  async createUser(userData: {
+    nickName: string;
+    email: string;
+    password: string;
+    mobileNumber: string;
+  }) {
     const { email } = userData;
     const foundUser = await userModel.findByEmail(email);
-    if (foundUser && foundUser.email == email) return { status: 400, err: '중복된 이메일입니다.' }
+    if (foundUser && foundUser.email == email)
+      return { status: 400, err: '중복된 이메일입니다.' };
 
     const newUser = await userModel.join(userData);
 
@@ -95,30 +101,36 @@ class UserService {
 
   // 회원 정보 수정
   async updateUser(_id: mongoose.Types.ObjectId, userdata: checkUser) {
-    if (!_id) return { status: 404, err: '작업에 필요한 ID가 없습니다.' }
+    if (!_id) return { status: 404, err: '작업에 필요한 ID가 없습니다.' };
     const updateUser = await this.userModel.update(_id, userdata);
-    if (!updateUser) return { status: 404, err: '작업에 필요한 유저가 없습니다.' }
+    if (!updateUser)
+      return { status: 404, err: '작업에 필요한 유저가 없습니다.' };
     return updateUser;
   }
 
   // 회원 정보 삭제
   async deleteUser(_id: mongoose.Types.ObjectId) {
     const foundUser = await this.userModel.deleteUser(_id);
-    if (!foundUser) return { status: 404, err: '해당 유저가 없습니다.' }
+    if (!foundUser) return { status: 404, err: '해당 유저가 없습니다.' };
 
     return foundUser;
   }
 
   // 그룹 가입
-  async joinCommunity(_id: mongoose.Types.ObjectId, communityId: mongoose.Types.ObjectId) {
+  async joinCommunity(
+    _id: mongoose.Types.ObjectId,
+    communityId: mongoose.Types.ObjectId,
+  ) {
     const user = await this.userModel.findByUserId(_id);
     const community = await this.communityModel.findByCommunityId(communityId);
 
-    if (!user) return { status: 404, err: '작업에 필요한 유저가 없습니다.' }
-    else if (!community) return { status: 404, err: '작업에 필요한 카테고리가 없습니다.' }
+    if (!user) return { status: 404, err: '작업에 필요한 유저가 없습니다.' };
+    else if (!community)
+      return { status: 404, err: '작업에 필요한 카테고리가 없습니다.' };
 
     // 사용자가 이미 그룹에 속해있을 때
-    if (user.communityId.some((cat) => cat?._id?.equals(community._id))) return { status: 400, err: '사용자가 이미 그룹에 속해 있습니다.' }
+    if (user.communityId.some((cat) => cat?._id?.equals(community._id)))
+      return { status: 400, err: '사용자가 이미 그룹에 속해 있습니다.' };
 
     user.communityId.push(community._id);
     await user.save();
@@ -127,23 +139,34 @@ class UserService {
   }
 
   // 그룹 탈퇴
-  async withdrawalCommunity(_id: mongoose.Types.ObjectId, communityId: mongoose.Types.ObjectId) {
+  async withdrawalCommunity(
+    _id: mongoose.Types.ObjectId,
+    communityId: mongoose.Types.ObjectId,
+  ) {
     const user = await this.userModel.findByUserId(_id);
     const community = await this.communityModel.findByCommunityId(communityId);
-    if (!user) return { status: 404, err: '작업에 필요한 유저가 없습니다.' }
-    else if (!community) return { status: 404, err: '작업에 필요한 카테고리가 없습니다.' }
+    if (!user) return { status: 404, err: '작업에 필요한 유저가 없습니다.' };
+    else if (!community)
+      return { status: 404, err: '작업에 필요한 카테고리가 없습니다.' };
 
     // 사용자가 그룹에 속해 있는지 확인
-    const index = user.communityId.findIndex((cat) => cat?._id?.equals(community._id));
+    const index = user.communityId.findIndex((cat) =>
+      cat?._id?.equals(community._id),
+    );
 
-
-    if (index === -1) return { status: 400, err: '사용자가 그룹에 속해 있지 않습니다.' }
+    if (index === -1)
+      return { status: 400, err: '사용자가 그룹에 속해 있지 않습니다.' };
 
     // 그룹에서 사용자를 제거
     user.communityId.splice(index, 1);
     await user.save();
 
     return user;
+  }
+
+  // 휴대폰 넘버로 아이디(이메일 조회)
+  async getEmailFromMobileNumber(mobileNumber: string) {
+
   }
 
   // 프로필 사진 등록 및 삭제
