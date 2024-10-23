@@ -6,7 +6,12 @@ export class UserModel {
     throw new Error('Method not implemented.');
   }
   // 유저 정보 등록 (로그인 시 최초 저장)
-  async join(userData: { nickName: string; email: string; password: string }) {
+  async join(userData: {
+    nickName: string;
+    email: string;
+    password: string;
+    mobileNumber: string;
+  }) {
     const user = await User.create(userData);
     return user;
   }
@@ -39,7 +44,8 @@ export class UserModel {
 
   // 유저 이메일로 사용자 조회
   async findByEmail(email: string) {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
+    // .populate('email');
     return user;
   }
 
@@ -54,6 +60,15 @@ export class UserModel {
     const userPassword = await User.findOne({ email }, 'password');
     return userPassword;
   }
+
+// 유저 폰 번호로 이메일 조회
+async findEmailByMobileNumber(mobileNumber: string) {
+  const user = await User.findOne({ mobileNumber }, 'email'); 
+  if (!user) {
+    return null;
+  }
+  return user.email; 
+}
 
   async userForToken(email: string) {
     const user = await User.findOne(

@@ -50,6 +50,11 @@ const UserSchema = new Schema(
       type: String,
       default: '',
     },
+    mobileNumber: {
+      // 휴대폰번호
+      type: String,
+      default: '',
+    },
     adminNumber: {
       // 관리자 여부
       type: Number,

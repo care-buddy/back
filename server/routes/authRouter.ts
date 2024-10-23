@@ -13,4 +13,7 @@ authRouter.post('/validate-authCode', authController.validateAuthCode); // 이�
 authRouter.get('/token', refreshToken, authController.createAccessToken); // 토큰 발급
 authRouter.post('/silent-refresh', authController.silentRefresh); // 자동 로그인 연장
 
+authRouter.post('/finding-id', authController.findingId) // 아이디 찾기
+authRouter.post('/send-password', ) // 비밀번호 보내주기
+
 export default authRouter;
