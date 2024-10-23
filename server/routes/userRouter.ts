@@ -1,8 +1,6 @@
 import { Router } from 'express';
 import userController from '../controller/userController';
-import { getUserToken } from '../middlewares/jwtAuth';
 import upload from '../utils/imageHandler';
-import { loginRequired } from '../middlewares/loginRequired';
 
 const userRouter = Router();
 
@@ -13,7 +11,6 @@ userRouter.get('/:_id', userController.getMyPage);
 userRouter.put('/:_id', userController.updateUser);
 // 회원 정보 삭제
 userRouter.put('/:_id/d', userController.deleteUser);
-
 // 그룹 가입
 userRouter.put('/:_id/joinCommunity', userController.joinCommunity);
 // 그룹 탈퇴

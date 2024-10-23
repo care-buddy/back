@@ -8,7 +8,7 @@ import postRouter from './postRouter';
 import hospitalRouter from './hospitalRouter';
 import commentRouter from './commentRouter';
 import searchRouter from './searchRouter';
-import meRouter from "./meRouter";
+import meRouter from './meRouter';
 
 import { getUserToken } from '../middlewares/jwtAuth';
 
@@ -20,9 +20,8 @@ router.use('/api/buddies', getUserToken, buddyRouter);
 router.use('/api/posts', postRouter);
 router.use('/api/hospitals', getUserToken, hospitalRouter);
 router.use('/api/comments', commentRouter);
-router.use('/api/searches', searchRouter);
-router.use("/api/me", getUserToken, meRouter);
+router.use('/api/search', searchRouter);
+router.use('/api/me', getUserToken, meRouter);
 //router.use('/api/me', unAuth, userController.confirmUserMe); //추가
-
 
 export default router;
