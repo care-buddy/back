@@ -200,18 +200,12 @@ class AuthController {
     }
   }
 
-  // 아이디 찾기 
+  // 아이디 찾기
   async findingId(req: Request, res: Response) {
     const { mobileNumber } = req.body;
     const email = await userService.getEmailFromMobileNumber(mobileNumber);
 
-    // 이메일 골뱅이 앞 두자리 **로 처리
-
-
-    res
-    .status(200)
-    .json({message: '아이디 조회', email })
-
+    res.status(200).json({ message: '아이디 조회가 성공했습니다', data: email });
   }
 
   // 토큰 발급

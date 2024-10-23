@@ -164,9 +164,24 @@ class UserService {
     return user;
   }
 
-  // 휴대폰 넘버로 아이디(이메일 조회)
+  // 폰번호로 이메일 조회
   async getEmailFromMobileNumber(mobileNumber: string) {
+    const email = await this.userModel.findEmailByMobileNumber(mobileNumber);
 
+    if (typeof email === 'string') {
+      // 이메일의 골뱅이 앞 부분에서 마지막 두 자리를 **로 마스킹 처리
+      const [emailFront, emailBack] = email.split('@');
+      const hidedEmailFront =
+        emailFront.length > 2 ? `${emailFront.slice(0, -2)}**` : '**';
+      const hidedEmail = `${hidedEmailFront}@${emailBack}`;
+
+      return { status: 200, email: hidedEmail };
+    }
+
+    return {
+      status: 404,
+      err: '해당하는 휴대폰 번호로 등록된 이메일이 없습니다.',
+    };
   }
 
   // 프로필 사진 등록 및 삭제

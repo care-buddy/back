@@ -30,7 +30,8 @@ export class UserModel {
 
   // 유저 이메일로 사용자 조회
   async findByEmail(email: string) {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email })
+    // .populate('email');
     return user;
   }
 
@@ -46,11 +47,14 @@ export class UserModel {
     return userPassword;
   }
 
-  // 휴대폰 번호로 이메일 조회
-  async findEmailByMobileNumber(MobileNumber: string) {
-    const email = await User.findOne({ MobileNumber });
-    return email;
+// 유저 폰 번호로 이메일 조회
+async findEmailByMobileNumber(mobileNumber: string) {
+  const user = await User.findOne({ mobileNumber }, 'email'); 
+  if (!user) {
+    return null;
   }
+  return user.email; 
+}
 
   async userForToken(email: string) {
     const user = await User.findOne(
