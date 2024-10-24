@@ -3,6 +3,8 @@ import { User, checkUser } from '../db/schemas/user';
 import userModel, { UserModel } from '../db/models/userModel';
 import { Request, Response, NextFunction } from 'express';
 
+import mongoose from 'mongoose';
+
 require('dotenv').config();
 
 const refreshSecretKey: string | Buffer = process.env.REFRESH_SECRET || '';
@@ -10,6 +12,7 @@ const accessSecret: string | Buffer = process.env.ACCESS_SECRET || '';
 const authKey: string | Buffer = process.env.AUTH_KEY || '';
 const algorithm: any = process.env.JWT_ALG;
 const expiresIn: string | undefined = process.env.JWT_EXP;
+const secretKey: string = process.env.JWT_SECRET || 'default_secret_key';
 
 const option = { algorithm, expiresIn };
 
@@ -68,4 +71,10 @@ const setAuthCodeToken = (authCode: String) => {
   return jwt.sign(payload, authKey, options);
 };
 
-export { setUserToken, setAuthCodeToken };
+// 비밀번호용 토큰 발급
+const generateResetToken = (userId: mongoose.Types.ObjectId) => {
+
+  return jwt.sign({ userId }, secretKey, { expiresIn: '1h' });
+}
+
+export { setUserToken, setAuthCodeToken, generateResetToken};

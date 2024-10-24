@@ -30,7 +30,7 @@ export class UserModel {
 
   // 유저 이메일로 사용자 조회
   async findByEmail(email: string) {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email });
     // .populate('email');
     return user;
   }
@@ -47,14 +47,14 @@ export class UserModel {
     return userPassword;
   }
 
-// 유저 폰 번호로 이메일 조회
-async findEmailByMobileNumber(mobileNumber: string) {
-  const user = await User.findOne({ mobileNumber }, 'email'); 
-  if (!user) {
-    return null;
+  // 유저 폰 번호로 이메일 조회
+  async findEmailByMobileNumber(mobileNumber: string) {
+    const user = await User.findOne({ mobileNumber }, 'email');
+    if (!user) {
+      return null;
+    }
+    return user.email;
   }
-  return user.email; 
-}
 
   async userForToken(email: string) {
     const user = await User.findOne(
@@ -100,6 +100,12 @@ async findEmailByMobileNumber(mobileNumber: string) {
       .populate('commentId');
     console.log(_id);
     return deletedUser;
+  }
+
+  // 이메일과 휴대폰 번호로 사용자 조회
+  async findUserByEmailAndMobile(email: string, mobileNumber: string) {
+    const user = await User.findOne({ email, mobileNumber });
+    return user;
   }
 
   // 프로필 사진 등록

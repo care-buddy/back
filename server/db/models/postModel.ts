@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { Post, checkPost } from '../schemas/post';
+import { Community } from '../schemas/community';
 
 export class PostModel {
   // 글 생성
@@ -8,13 +9,32 @@ export class PostModel {
     return newPost;
   }
 
-  // 조건에 맞는 게시글 조회(커뮤니티별 게시글 조회용)
-  async findPosts(query: object) {
-    const posts = await Post.find(query)
-      .populate('userId')
-      .populate('communityId')
-      .populate('commentId');
-    return posts;
+  // 특정 커뮤니티의 게시글 조회와 커뮤니티 정보 조회
+  // async findPostsAndCommunity(communityId: string) {
+  //   const [posts, community] = await Promise.all([
+  //     Post.find({ communityId }) // 커뮤니티 ID로 게시글 조회
+  //       .populate('userId')
+
+  //       .populate('commentId'),
+  //     Community.findById(communityId).populate({
+  //       path: 'communityId',
+  //       select: 'community category', // community와 category 필드만 가져옴
+  //     }), // 커뮤니티 ID 문자열로 조회
+  //   ]);
+
+  //   return { posts, community };
+  // }
+
+  // 특정 커뮤니티의 게시글 조회와 커뮤니티 정보 조회
+  async findPostsAndCommunity(communityId: string) {
+    const [posts, community] = await Promise.all([
+      Post.find({ communityId }) // 커뮤니티 ID로 게시글 조회
+        .populate('userId')
+        .populate('commentId'),
+      Community.findById(communityId), // 커뮤니티 정보 조회
+    ]);
+
+    return { posts, community };
   }
 
   // 전체 글 조회

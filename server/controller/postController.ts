@@ -60,13 +60,6 @@ class PostController {
       // 커뮤니티 ID에 해당하는 게시글 조회
       const posts = await postService.confirmCommunityPosts(objectId);
 
-      // 게시글이 없으면 404 에러 반환
-      // if (!posts.length) {
-      //   return res
-      //     .status(404)
-      //     .json({ success: false, message: '게시글이 없습니다.' });
-      // }
-
       // 게시글 반환
       res.status(200).json({ success: true, data: posts });
     } catch (err: any) {

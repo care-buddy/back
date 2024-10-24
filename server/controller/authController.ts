@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
 import { hashPassword, verifyPassword } from '../utils/hash';
-import { setAuthCodeToken, setUserToken } from '../utils/jwt';
+import { setAuthCodeToken, setUserToken, generateResetToken } from '../utils/jwt';
 import { generateRandomCode } from '../utils/generateRandomCode';
 import sendMail from '../utils/sendMail';
+
 import userService from '../services/userServices';
 import jwt from 'jsonwebtoken';
 import authCodeCache from '../utils/cache';
@@ -205,8 +206,40 @@ class AuthController {
     const { mobileNumber } = req.body;
     const email = await userService.getEmailFromMobileNumber(mobileNumber);
 
-    res.status(200).json({ message: '아이디 조회가 성공했습니다', data: email });
+    res
+      .status(200)
+      .json({ message: '아이디 조회가 성공했습니다', data: email });
   }
+
+  // // 비밀번호 재설정 링크 발송
+  // async sendPasswordResetLink(req: Request, res: Response) {
+  //   const { email, mobileNumber } = req.body;
+  
+  //   // 이메일과 휴대폰 번호를 기반으로 사용자 찾기
+  //   const user = await userService.getUserByEmailAndMobile(email, mobileNumber);
+  //   if (!user) {
+  //     return res.status(404).send({ message: '사용자를 찾을 수 없습니다.' });
+  //   }
+  
+  //   // 비밀번호 재설정 토큰 생성
+  //   const resetToken = generateResetToken(user._id);
+  
+  //   // 비밀번호 재설정 링크
+  //   const resetLink = `https://carebuddy/reset-password?token=${resetToken}`;
+  
+  //   // 이메일 발송
+  //   await sendMail(
+  //     email,
+  //     `Carebuddy 비밀번호 재설정 안내`,
+  //     '비밀번호 재설정',
+  //     `아래 링크를 통해 비밀번호를 재설정하세요: ${resetLink}`,
+  //     7,
+  //   );
+  
+  //   res.send({
+  //     message: '비밀번호 재설정 링크가 이메일로 전송되었습니다.',
+  //   });
+  // }
 
   // 토큰 발급
   async createAccessToken(req: Request, res: Response) {

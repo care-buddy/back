@@ -38,12 +38,7 @@ class UserService {
     return user;
   }
 
-  // // 유저 이메일 조회
-  // async getUserFromEmail(email: string) {
-  //   const user = await userModel.findByEmail(email);
-  //   return user;
-  // }
-
+  // 유저 이메일 조회
   async getUserFromEmail(email: string) {
     // 이메일로 사용자 찾기
     const user = await userModel.findByEmail(email);
@@ -184,6 +179,17 @@ class UserService {
     };
   }
 
+  // 폰번호와 이메일로 사용자 조회
+  async getUserByEmailAndMobile(email: string, mobileNumber: string) {
+    const user = await this.userModel.findUserByEmailAndMobile(
+      email,
+      mobileNumber,
+    );
+    if (!user) {
+      return { status: 404, err: '사용자를 찾을 수 없습니다.' };
+    }
+    return { status: 200, data: user };
+  }
   // 프로필 사진 등록 및 삭제
   async updateProfileImage(email: string, profileImage?: string) {
     console.log(`${email}의 프로필을 수정합니다. [Service]`);
