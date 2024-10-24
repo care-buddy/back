@@ -30,7 +30,10 @@ export class PostModel {
     const [posts, community] = await Promise.all([
       Post.find({ communityId }) // 커뮤니티 ID로 게시글 조회
         .populate('userId')
-        .populate('commentId'),
+        .populate({
+          path: 'commentId',
+          match: { deletedAt: { $eq: null } },
+        }),
       Community.findById(communityId), // 커뮤니티 정보 조회
     ]);
 
@@ -42,7 +45,10 @@ export class PostModel {
     const posts = await Post.find({})
       .populate('userId')
       .populate('communityId')
-      .populate('commentId');
+      .populate({
+        path: 'commentId',
+        match: { deletedAt: { $eq: null } },
+      });
     return posts;
   }
 
