@@ -21,7 +21,15 @@ export class UserModel {
     // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
     const user = await User.findById({ _id })
       .populate('buddyId')
-      .populate('postId')
+      .populate({
+        path: 'postId',
+        select:
+          'commentId communityId content title createdAt updatedAt deletedAt',
+        populate: {
+          path: 'communityId',
+          select: 'community category',
+        },
+      })
       .populate('communityId')
       .populate('commentId');
 
