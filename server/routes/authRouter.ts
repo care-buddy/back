@@ -14,6 +14,6 @@ authRouter.get('/token', refreshToken, authController.createAccessToken); // 토
 authRouter.post('/silent-refresh', authController.silentRefresh); // 자동 로그인 연장
 
 authRouter.post('/finding-id', authController.findingId) // 아이디 찾기
-authRouter.post('/send-password', ) // 비밀번호 보내주기
+// authRouter.post('/send-password-reset-page', authController.sendPasswordResetLink ) // 비밀번호 재설정 링크 발송
 
 export default authRouter;
