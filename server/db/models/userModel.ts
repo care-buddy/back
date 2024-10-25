@@ -20,24 +20,18 @@ export class UserModel {
   async findByUserId(_id: mongoose.Types.ObjectId) {
     // 유저 정보 조회의 _id 타입을 schema types object id로 맞춰야 할까
     const user = await User.findById({ _id })
-      .populate({
-        path: 'buddyId',
-        select: 'name kind birth buddyImage',
-      })
+      .populate('buddyId')
       .populate({
         path: 'postId',
-        select: 'commentId communityId content title createdAt updatedAt deletedAt',
+        select:
+          'commentId communityId content title createdAt updatedAt deletedAt',
         populate: {
           path: 'communityId',
           select: 'community category',
         },
       })
-      .populate({
-        path: 'communityId',
-        select: 'community category',
-      })
-      .select('-commentId')
-      .exec();
+      .populate('communityId')
+      .populate('commentId');
 
     return user;
   }
