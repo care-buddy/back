@@ -2,10 +2,6 @@ import mongoose from 'mongoose';
 import { User } from '../schemas/user';
 
 export class MeModel {
-  static findByUserId(_id: mongoose.Types.ObjectId | undefined) {
-    throw new Error('Method not implemented.');
-  }
-
   // userId로 사용자 조회
   async findByUserId(_id: mongoose.Types.ObjectId) {
     const user = await User.findById(_id)
@@ -31,6 +27,13 @@ export class MeModel {
 
     return user;
   }
+
+  // 사용자 계정 삭제
+  async deleteUser(_id: mongoose.Types.ObjectId) {
+    const deletedUser = await User.findByIdAndDelete(_id);
+    return deletedUser;
+  }
 }
+
 const meModel = new MeModel();
 export default meModel;

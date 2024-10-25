@@ -3,6 +3,7 @@ import userModel, { UserModel } from '../db/models/userModel';
 import { checkUser } from '../db/schemas/user';
 import communityModel, { CommunityModel } from '../db/models/communityModel';
 import { verifyPassword } from '../utils/hash';
+import User from '../db/models/userModel'
 
 class UserService {
   userModel: UserModel;
@@ -103,12 +104,26 @@ class UserService {
   }
 
   // 회원 정보 삭제
-  async deleteUser(_id: mongoose.Types.ObjectId) {
-    const foundUser = await this.userModel.deleteUser(_id);
-    if (!foundUser) return { status: 404, err: '해당 유저가 없습니다.' };
+  async deleteUserAccount(_id: mongoose.Types.ObjectId) {
+    // 1. 사용자 찾기
+    const user = await this.userModel.findByUserId(_id);
 
-    return foundUser;
+    // 2. 사용자 존재 여부 확인
+    if (!user) {
+      return { status: 404, err: '해당 유저를 찾을 수 없습니다.' };
+    }
+
+    // 3. 사용자 삭제
+    const deletedUser = await this.userModel.deleteUser(_id);
+
+    // 4. 삭제 결과 반환
+    if (!deletedUser) {
+      return { status: 500, err: '사용자 정보를 삭제하는 데 실패했습니다.' };
+    }
+
+    return { status: 200, data: '사용자 계정이 성공적으로 삭제되었습니다.' };
   }
+
 
   // 그룹 가입
   async joinCommunity(
