@@ -44,8 +44,8 @@ class UserController {
   // 회원 탈퇴
   async deleteUser(req: Request, res: Response) {
     try {
-      const { id } = req.params; // 사용자 ID를 URL 파라미터로 받음
-      const deletedUser = await userService.deleteUser(new mongoose.Types.ObjectId(id));
+      const { _id } = req.params; // 사용자 ID를 URL 파라미터로 받음
+      const deletedUser = await userService.deleteUserAccount(new mongoose.Types.ObjectId(_id));
 
       if (!deletedUser) {
         return res.status(404).json({ success: false, message: "사용자 정보를 삭제하는 데 실패했습니다." });
