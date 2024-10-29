@@ -17,7 +17,7 @@ app.use(passport.initialize());
 
 app.use(
   cors({
-    origin: 'https://carebuddy.vercel.app', // 임시(도메인을 설정해야 httpOnly로 쿠키를 보낼 수 있음)
+    origin: ['http://localhost:5173', 'https://carebuddy.vercel.app'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization', 'cookie'], // Authorization 헤더를 허용
     exposedHeaders: '*',
@@ -57,5 +57,5 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT || 3003}`);
+  console.log(`Server is running on port ${PORT || 3001}`);
 });
