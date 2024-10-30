@@ -41,10 +41,12 @@ const setUserToken = (user: any, isOnlyAccess: Number, res: Response) => {
 
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true, // 클라이언트 측 JavaScript에서 쿠키를 접근할 수 없게 함
-      // secure: process.env.NODE_ENV === 'production', // 프로덕션 환경에서는 HTTPS를 통해서만 전송
-      secure: false, // 개발 환경에서는 false로 테스트
+      // secure: false, // 개발 환경에서는 false로 테스트
       maxAge: 7 * 24 * 60 * 60 * 1000, // 쿠키 만료 시간 (7일)
+      secure: true,   // HTTPS 사용 시에만 설정
+      sameSite: 'none'  // CORS 요청을 허용하기 위해 none으로 설정
     });
+
 
     User.updateOne(
       { email: refreshPayload.email },
